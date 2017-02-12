@@ -17,11 +17,11 @@ env:
  
 before_script:
   - DONTGRAB_SRCS=$CI
-  - eval ". ./dist/lin/envs/$THISENV.sh"
-  - . ./dist/lin/travis-ci.sh
+  - eval ". ./dist/linux/envs/$THISENV.sh"
+  - . ./dist/linux/travis-ci.sh
 
 script:
-  - . ./dist/lin/docker-buildtest.sh
+  - . ./dist/linux/docker-buildtest.sh
   
 git:
   depth: 10
