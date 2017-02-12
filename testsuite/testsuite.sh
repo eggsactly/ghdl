@@ -13,7 +13,7 @@ do_gna ()
   echo "**** GNA ****"
   echo "*************"
   cd gna
-  ./testsuite.sh
+  ./testsuite.sh 1>> gna.log 2>&1 || cat gna.log
   cd ..
 }
 
@@ -25,7 +25,7 @@ do_vests ()
   echo "***************"
   gnatmake get_entities
   cd vests
-  ./testsuite.sh
+  ./testsuite.sh 1>> vests.log 2>&1 || cat vests.log
   cd ..
 }
 
