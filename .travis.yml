@@ -9,11 +9,11 @@ install: true
 services: docker
 
 env:
-  - THISENV="ubuntu1404_llvm35" && BUILDTHIS=
-  - THISENV="ubuntu1204_llvm38" && BUILDTHIS= 
-  - THISENV="fedora_mcode" && BUILDTHIS=
-  - THISENV="ubuntu_mcode" && BUILDTHIS=1
-  - THISENV="fedora_llvm" && BUILDTHIS=1
+  - THISENV="ubuntu1404_llvm35" && TAGONLY=1
+  - THISENV="ubuntu1204_llvm38" && TAGONLY=1 
+  - THISENV="fedora_mcode" && TAGONLY=1
+  - THISENV="ubuntu_mcode" && TAGONLY=0
+  - THISENV="fedora_llvm" && TAGONLY=0
  
 before_script:
   - DONTGRAB_SRCS=$CI
