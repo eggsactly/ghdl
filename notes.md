@@ -6,9 +6,7 @@
 
 # Integrate build instructions into the GHDL documentation [#280](https://github.com/tgingold/ghdl/issues/280)
 
-- Coverage, `gcov`, is unique to gcc. That specific difference is not explained anywhere. Should be added.
-- But you can debug with llm 3.5 too. So, besides coverage, between gcc and llvm: it is a matter of taste!
-- https://github.com/tgingold/ghdl/issues/279
+- Docker GCC
 
 # Nightly builds
 
@@ -20,13 +18,8 @@
 
 # Improve test suite log output handling
 
-Yes, adding an option that redirects outputs is a good idea. But display the output in case of failure.
-
-[test.ps1](https://github.com/tgingold/ghdl/blob/master/dist/appveyor/test.ps1#L64-L78) for Appveyor can be taken as a reference.
-
-¿Improve compilation output as well?
-
-# doc: extract version from `version.in` (if not in git) [#221](https://github.com/tgingold/ghdl/issues/221)
+- [test.ps1](https://github.com/tgingold/ghdl/blob/master/dist/appveyor/test.ps1#L64-L78) for Appveyor can be taken as a reference.
+- ¿Improve compilation output as well?
 
 # Compile on Alpine Linux
 
