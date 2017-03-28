@@ -86,21 +86,8 @@ secure: Pgst/qIHO6euzBssYnNTYCnd6IWHWJPolKESSvsxIDXG8V79BnCXClKMpAjBjlG/Zwx6Py6/
 - Purge
 	- GHDL repo is 45MB. Just expiring and purging it shrinks to 8MB. Would the history be lost? Or just that of the files which are no longer used? Can it be done so that no `reset --hard` is needed?
 - https://mail.gna.org/public/ghdl-discuss/2016-04/msg00003.html
-- https://mail.gna.org/public/ghdl-discuss/2016-11/msg00004.html
-- https://mail.gna.org/public/ghdl-discuss/2016-11/msg00005.html
 	
 # Links
-- [yosys – Yosys Open SYnthesis Suite](https://github.com/cliffordwolf/yosys)
-- https://github.com/metaspace/ghdl_extra
 - https://paebbels.github.io/
-- FOSDEM 207
-	- [FPGA OSS Tutorial](https://fosdem.org/2017/schedule/event/fpga_oss_tutorial/)
-	- [Programming RPi3](https://fosdem.org/2017/schedule/event/programming_rpi3/)
-	- [FLOSS High Level Synthesis](https://fosdem.org/2017/schedule/event/floss_high_level_synth/)
-	- [HDL Discussion](https://fosdem.org/2017/schedule/event/hdl_discussion/)
-- https://github.com/haojunliu/OpenFPGA
-	- https://github.com/Martoni/OpenFPGA/
 - https://github.com/dwyl/learn-environment-variables
-- http://flopoco.gforge.inria.fr/
 - http://www.dossmatik.de/ghdl/GHDL_uart_sim.pdf
-- https://github.com/forflo/yodl
