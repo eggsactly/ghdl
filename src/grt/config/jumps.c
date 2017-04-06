@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <fcntl.h>
 
-#if defined (__linux__) || defined (__APPLE__)
+#if (defined (__linux__) && defined (__GLIBC__)) || defined (__APPLE__)
 #define HAVE_BACKTRACE 1
 #include <sys/ucontext.h>
 #endif

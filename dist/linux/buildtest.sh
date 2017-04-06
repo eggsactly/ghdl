@@ -103,6 +103,7 @@ echo "travis_fold:end:make"
 echo "travis_fold:start:install"
 printf "$ANSI_YELLOW[GHDL] Install $ANSI_NOCOLOR\n"
 make install
+
 cd ..
 echo "travis_fold:end:install"
 
