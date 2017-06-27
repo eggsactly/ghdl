@@ -1,0 +1,8 @@
+FROM debian:sid-slim
+
+ADD ghdl.tgz /usr/
+
+RUN apt-get update -qq \
+ && apt-get -y install libgnat-7 \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && cat ~/.bashrc | sed -e "s/#force_color_prompt=yes/force_color_prompt=yes/" > tmpfile && mv tmpfile ~/.bashrc \

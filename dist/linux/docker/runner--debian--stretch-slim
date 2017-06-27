@@ -1,0 +1,9 @@
+FROM debian:stretch-slim
+
+ADD ghdl.tgz /usr/
+
+RUN apt-get update -qq \
+ && apt-get -y install gnat-6 g++-6 zlib1g-dev \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && ln -s /usr/bin/gcc-6 /bin/gcc \
+ && cat ~/.bashrc | sed -e "s/#force_color_prompt=yes/force_color_prompt=yes/" > tmpfile && mv tmpfile ~/.bashrc \

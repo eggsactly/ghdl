@@ -11,8 +11,6 @@
 # ticketXX is from https://sourceforge.net/p/ghdl-updates/tickets/
 # issueXXX is from https://github.com/tgingold/ghdl/issues
 
-set -e
-
 dirs="bug* sr* deb* ticket* issue*"
 failures=""
 full=n

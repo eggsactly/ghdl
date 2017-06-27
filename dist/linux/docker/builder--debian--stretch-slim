@@ -1,0 +1,15 @@
+FROM debian:stretch-slim
+
+RUN apt-get update -qq \
+ && apt-get -y install gnat-6 g++-6 make zlib1g-dev \
+                       git llvm-dev clang \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && ln -s /usr/bin/gcc-6 /bin/gcc \
+ && cat ~/.bashrc | sed -e "s/#force_color_prompt=yes/force_color_prompt=yes/" > tmpfile && mv tmpfile ~/.bashrc \
+ && printf "%s\n" \
+    "$(gnat --version | grep 'GNAT')" \
+    "$(gcc --version | grep 'gcc')" \
+    "$(clang --version | grep 'clang')"	\
+    "$(make --version | grep 'Make')" \
+    "$(git version)" > /GHDL_DEVTOOL_VERSIONS
+ 

@@ -31,7 +31,15 @@ done
 
 #---
 
-printf "$ANSI_BLUE[$TASK| GHDL] Prepare $(pwd) $ANSI_NOCOLOR\n"
+if [ -f "/GHDL_DEVTOOL_VERSIONS" ]; then
+  printf "$ANSI_BLUE[$TASK| GHDL] Build - tool versions$ANSI_NOCOLOR\n"
+  cat /GHDL_DEVTOOL_VERSIONS
+  cat /GHDL_DEVTOOL_VERSIONS 1>> log.log 2>&1;
+fi
+
+#---
+
+printf "$ANSI_BLUE[$TASK| GHDL] Build - prepare $(pwd) $ANSI_NOCOLOR\n"
 CDIR=$(pwd)
 mkdir logs
 prefix="$CDIR/install-$BLD"
@@ -41,12 +49,13 @@ cd "build-$BLD"
 
 #---
 
-printf "$ANSI_BLUE[$TASK| GHDL] Environment $ANSI_NOCOLOR\n"
+printf "$ANSI_BLUE[$TASK| GHDL] Build - environment $ANSI_NOCOLOR\n"
 env 1>> ../log.log 2>&1
 
 #---
 
-printf "$ANSI_BLUE[$TASK| GHDL - build] Configure $ANSI_NOCOLOR\n"
+printf "$ANSI_BLUE[$TASK| GHDL] Build - configure $ANSI_NOCOLOR\n"
+
 case "$BLD" in
   mcode)
     ../configure "--prefix=$prefix" 1>> ../log.log 2>&1
@@ -62,38 +71,29 @@ case "$BLD" in
   ;;
 
   llvm-3.8)
-    ../configure "--prefix=$prefix" "--with-llvm-config=llvm-config-3.8"  1>> ../log.log 2>&1
+    ../configure "--prefix=$prefix" "--with-llvm-config=llvm-config-3.8" 1>> ../log.log 2>&1
     MAKEOPTS="CXX=clang++-3.8"
   ;;
 
-  docker) printf "$ANSI_MAGENTA[$TASK| GHDL - build] Check docker container! $ANSI_NOCOLOR\n"; exit 0;;
+  docker) printf "$ANSI_MAGENTA[$TASK| GHDL] Build - check docker container! $ANSI_NOCOLOR\n"; exit 0;;
 
-  *)      printf "$ANSI_RED[$TASK| GHDL - build] Unknown build $BLD $ANSI_NOCOLOR\n"
+  *)      printf "$ANSI_RED[$TASK| GHDL] Build - unknown build $BLD $ANSI_NOCOLOR\n"
           exit 1;;
 esac
 
 #---
 
-printf "$ANSI_BLUE[$TASK| GHDL - build] Make $ANSI_NOCOLOR\n"
+printf "$ANSI_BLUE[$TASK| GHDL] Build - make $ANSI_NOCOLOR\n"
 make  $MAKEOPTS 1>> ../log.log 2>&1
-printf "$ANSI_BLUE[$TASK| GHDL - build] Install $ANSI_NOCOLOR\n"
+printf "$ANSI_BLUE[$TASK| GHDL] Build - install $ANSI_NOCOLOR\n"
 make install 1>> ../log.log 2>&1
 cd ..
 
 #---
 
-printf "$ANSI_BLUE[$TASK| GHDL] Create package $ANSI_DARKCYAN$PKG_FILE $ANSI_NOCOLOR\n"
+printf "$ANSI_BLUE[$TASK| GHDL] Build - create package $ANSI_DARKCYAN$PKG_FILE $ANSI_NOCOLOR\n"
 tar -zcvf "$PKG_FILE" -C "$prefix" . 1>> log.log 2>&1
 
 #---
 
-export ENABLECOLOR="$ENABLECOLOR"
-export TASK="$TASK"
-export GHDL="$CDIR/install-$BLD/bin/ghdl"
-cd testsuite && ./testsuite.sh
-cd ..
-
-#---
-
-# Do not remove this line, and don't write anything below, since it is used to identify successful builds
-echo "[$TASK|SUCCESSFUL]" 1>> log.log 2>&1
+printf "$ANSI_BLUE[$TASK| GHDL] Build - $ANSI_GREEN SUCCESS $ANSI_NOCOLOR\n"

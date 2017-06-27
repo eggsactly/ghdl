@@ -1,0 +1,16 @@
+FROM debian:sid-slim
+
+RUN apt-get update -qq \
+ && apt-get -y install gnat-7 gcc-7 make zlib1g-dev \
+                       git llvm-dev clang \
+ && apt-cache search libstdc++ \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && ln -s /usr/bin/gcc-7 /bin/gcc \
+ && cat ~/.bashrc | sed -e "s/#force_color_prompt=yes/force_color_prompt=yes/" > tmpfile && mv tmpfile ~/.bashrc \
+ && printf "%s\n" \
+    "$(gnat --version | grep 'GNAT')" \
+    "$(gcc --version | grep 'gcc')" \
+    "$(make --version | grep 'Make')" \
+    "$(git version)" \
+    "$(clang --version | grep 'clang')" > /GHDL_DEVTOOL_VERSIONS
+ 
