@@ -4,6 +4,10 @@
 
 ---
 
+https://github.com/search?utf8=%E2%9C%93&q=author%3A1138-4EB
+
+---
+
 # Integrate build instructions into the GHDL documentation [#280](https://github.com/tgingold/ghdl/issues/280)
 
 - Docker GCC
