@@ -41,12 +41,12 @@ deploy:
   - provider: releases
     skip_cleanup: true
     api_key:
-      secure: ji6LXOmD5V2N+ELHZr4oJsmxPhedk+8W6jfCqQdEbewQ42N+fKOq3lgqJni7ZdfpZaulB9OHPTApv3bwOjXjtN9rfBGmq//U9CwvzHmUeomdQv6WQOVevaWSXl3DNL9fk3yKynyFrsv4pvr45L8GIjaHLggKcYhNFPJ2rrnJlDoFT9MqQNpmP7Bg/LnwVQiv+ZDPkLlMWQzrXzLamdQILARPQka+kCdXl/sHH6OKvLgRvu9yvyXYSSfbyAHP+THISS5gDciizSBeWGlU75kgj/N+mkV+8NvtTTfEIgG8y49WJz6aBooTmRzk/jZW1dKMbDR6c5bpTmRvMZSzeSBuAR6WLhr6HevgCPi/1fX1y3pkVSrgBUF5KcxPgWCZp0I05QjaJOdvQDl1hH4TlVwpT18lM2+cWrui9fS7spnk/AuNKX882C5QWWRy28lIPasCVnwfeKX8a9KAwY9OqVOenoLC1yx7NJOGfH1bjuSYYxyR4XgLiGTHKALAuknCyD9QL0o378IwqxHMcsN0Gsd+GndMu0/b8GvSqfzDpV1XknqabQFwkZLs+Yydw0snfBUzXw9TfOk78IiPYEgXAxsQKBAkK7qvO36HIxLlSQXglXU1D4IDtQYDUel6vKll4pgu0WMxStQCbj51yDVJKvRhzwiBNC6Pwgzt2JTrpwM/T/U=
+      secure: VzowiHBE7Lc14p/QOFvYYLz65g1uvYvffv32F2AVlpt4hs0EAdqME2+BLPnDDI1D4Oou30VXs2p37doI0J2qyyiT5TbSFzErYz+7uREYEOBWR5IQsK/iQrSxKOZ2Ox558T1zcObnZhVjAbV1yxQhdqitSWBCpayuNl4Gvubc0S1+MXhh/psvLgJ/r2Nq5gCAaoqmxvHUoNotQWYF5hKzynXPvV0wniB2l2HKc/UMK7jIu+GRKwMWk1NXuBk5ocreoAVrSH/FHD87K8wUfUqgaGjYRaniKbl2etMw4kcfRC1J+WtcUzVeHtb2tnlHo1Qk1tE7Dt5LMWYp0RlpiLfHmu4attHn2jdKBwdetGiB+admq7D6K0bROVQw6l1kJNYNROXR9PhA6ZkYQvDY1iF+RmikUee8zpGEZE0Ux1RjlCBAOE+yJu3/TWJpO3KCFEYKELqmljOgpaAu/ogyowLwDtakjzK1nA34CmgN9xwgARuxbzQNPxMIlFBeH4QJ9qMj3Jo9jUOxKF4dtSF5Y2t8p4XZ4RDBAwMb4QB35BaWCd7u2UwCVbks3CR7mdFXT22ZjN+92kgFOsqhsK67cNCXuUhL3jDAQ5His4qqca2+A25BVDFG3qz673gZotIq4/MYcBZx7daNJN88dFH47Rx8SDtiu7mb/6Y7TMaf7zW/KEs=
     file: "ghdl-*.tgz"
     file_glob: true
     on:
-      repo: tgingold/ghdl
+      repo: 1138-4EB/ghdl
+      branch: stable
       tags: true
-      all_branches: true
 
 after_deploy: "echo deployed"
