@@ -2,49 +2,40 @@ branches:
   except:
   - appveyor
 
-language: c
+language: minimal
 
-matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      services: docker
-      env: IMAGE=stretch+mcode
-    - os: linux
-      dist: trusty
-      sudo: required
-      services: docker
-      env: IMAGE=stretch+mcode+gpl
-    - os: linux
-      dist: trusty
-      sudo: required
-      services: docker
-      env: IMAGE=ubuntu14+mcode
-    - os: linux
-      dist: trusty
-      sudo: required
-      services: docker
-      env: IMAGE=ubuntu14+llvm-3.8
-    - os: linux
-      dist: trusty
-      sudo: required
-      services: docker
-      env: IMAGE=fedora26+mcode
-    - os: osx
-      osx_image: xcode7.3
-      env: IMAGE=macosx+mcode
-      cache:
-        directories:
-          - gnat
-
+os: linux
+dist: trusty
+sudo: required
+services: docker
 install: true
 
-script:
-- ./dist/linux/travis-ci.sh
+addons:
+  apt:
+    packages:
+      - docker-ce
 
-before_deploy:
-- "echo ready to deploy"
+env:
+  matrix:
+    - IMAGE=stretch+mcode
+    - IMAGE=stretch+mcode+gpl
+    - IMAGE=ubuntu14+mcode
+    - IMAGE=ubuntu14+llvm-3.8
+    - IMAGE=fedora26+mcode
+
+jobs:
+  include:
+  - os: osx
+    language: c
+    osx_image: xcode7.3
+    env: IMAGE=macosx+mcode
+    cache:
+      directories:
+        - gnat
+
+script: "./dist/linux/travis-ci.sh"
+
+before_deploy: "echo ready to deploy"
 
 deploy:
   - provider: releases
@@ -58,5 +49,4 @@ deploy:
       tags: true
       all_branches: true
 
-after_deploy:
-- "echo deployed"
+after_deploy: "echo deployed"
