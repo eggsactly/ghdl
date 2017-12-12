@@ -19,6 +19,21 @@ build_img_ghdl() {
     echo "travis_fold:end:build_run"
 }
 
+build_img_pkg() {
+    # Build ghdl/pkg from scratch
+    echo "travis_fold:start:build_scratch"
+    travis_time_start
+    printf "$ANSI_BLUE[DOCKER build] pkg : ${IMAGE_TAG}$ANSI_NOCOLOR\n"
+    cd tmp-img
+    echo "FROM scratch" > Dockerfile
+    echo "COPY $PKG ./" >> Dockerfile
+    echo "COPY BUILD_TOOLS ./" >> Dockerfile
+    docker build -t ghdl/pkg:$IMAGE_TAG .
+    cd .. && rm -rf tmp-img
+    travis_time_finish
+    echo "travis_fold:end:build_scratch"
+}
+
 #---
 
 set -e
@@ -108,6 +123,7 @@ else
     docker run --rm -t -v $(pwd):/work -w "/work" ghdl/build:$IMAGE_TAG bash -c "${scriptdir}/build.sh $BUILD_CMD_OPTS"
 fi
 
+
 if [ ! -f build_ok ]; then
     printf "$ANSI_RED[TRAVIS] BUILD failed $ANSI_NOCOLOR\n"
     exit 1
@@ -123,6 +139,7 @@ else
     build_img_ghdl
     # Run test in docker container
     docker run --rm -t -v $(pwd):/work -w "/work" ghdl/ghdl:$IMAGE_TAG bash -c "GHDL=ghdl ${scriptdir}/test.sh $BUILD_CMD_OPTS"
+    build_img_pkg
 fi
 
 if [ ! -f test_ok ]; then

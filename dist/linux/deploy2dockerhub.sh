@@ -14,6 +14,8 @@ fi
 
 case $1 in
   "")    FILTER="/";;
+  "ext") FILTER="/ext";;
+  "pkg") FILTER="/pkg:all";;
   *)     FILTER="/ghdl /pkg";;
 esac
 

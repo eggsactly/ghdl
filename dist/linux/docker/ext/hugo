@@ -1,0 +1,10 @@
+#FROM python:3.6-slim-stretch AS do-hugo
+
+FROM python:3.6-alpine3.7 as do-hugo
+RUN apk --no-cache -U upgrade && apk --no-cache add ca-certificates curl py3-docutils git \
+  && pip3 install rst2html5 \
+  && curl -L https://github.com/gohugoio/hugo/releases/download/v0.31.1/hugo_0.31.1_Linux-64bit.tar.gz | tar zxvf - hugo -C /usr/local/bin
+
+WORKDIR /src
+EXPOSE 1313
+ENTRYPOINT ["hugo"]
