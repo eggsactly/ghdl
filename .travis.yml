@@ -22,7 +22,7 @@ deploy:
     script: ./dist/linux/deploy2dockerhub.sh "$IMAGE" "$TRAVIS_COMMIT_MESSAGE"
     on:
       repo: 1138-4EB/ghdl
-      branch: rtd2travis
+      branch: builders
   - &deploy-releases
     provider: releases
     skip_cleanup: true
@@ -58,6 +58,8 @@ env:
 stages:
 #  - create ghdl/build and ghdl/run images
 #  - test
+#  - collect ghdl/pkg images and build ghdl/pkg:all
+#  - extended images
   - build and update gh-pages
 
 jobs:
@@ -81,6 +83,15 @@ jobs:
       env: IMAGE=macosx+mcode
       deploy:
         - <<: *deploy-releases
+    - stage: collect ghdl/pkg images and build ghdl/pkg:all
+      env: IMAGE="pkg"
+      script: ./dist/linux/pack.sh
+      deploy:
+        - <<: *deploy-releases
+        - <<: *deploy-docker
+    - stage: extended images
+      env: IMAGE="ext"
+      script: ./dist/linux/extended.sh
     - stage: build and update gh-pages
       script: ./dist/linux/gh-pages.sh
       deploy:
