@@ -14,10 +14,12 @@ fi
 
 case $1 in
   "")    FILTER="/";;
+  "ext") FILTER="/ext";;
+  "pkg") FILTER="/pkg:all";;
   *)     FILTER="/ghdl /pkg";;
 esac
 
-docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 for key in $FILTER; do
   for tag in `echo $(docker images ghdl$key* | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
       if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
