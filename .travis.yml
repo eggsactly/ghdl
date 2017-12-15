@@ -30,6 +30,9 @@ env:
     - IMAGE=ubuntu14+mcode
     - IMAGE=ubuntu14+llvm-3.8
     - IMAGE=fedora26+mcode
+    - IMAGE=stretch+gcc-5_5_0
+    - IMAGE=fedora26+gcc-6_4_0
+    - IMAGE=buster+gcc-7_2_0
 
 # A single additional job is described for the macos build. The constraints above are used, except explicitly overriden.
 jobs:

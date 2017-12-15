@@ -1,0 +1,5 @@
+# Fedora 26
+FROM fedora:26
+
+RUN dnf --nodocs -y install gcc-gnat gcc gcc-c++ zlib-devel lbzip2 flex autogen texinfo dejagnu make wget bzip2 \
+  && dnf clean all

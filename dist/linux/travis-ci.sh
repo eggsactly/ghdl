@@ -76,6 +76,7 @@ else
     travis_time_start
     printf "$ANSI_YELLOW[DOCKER build] Docker build $ANSI_NOCOLOR\n"
 
+    if echo $DBLD | grep gcc; then IMAGE="$DDIST+gcc"; fi
     DOCKERFILE="dist/linux/docker/build-$IMAGE"
 
     echo "dockerfile: $DOCKERFILE"
