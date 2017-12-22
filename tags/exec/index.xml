@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Exec on GHDL</title>
+    <link>http://1138-4EB.github.io/ghdl/tags/exec/</link>
+    <description>Recent content in Exec on GHDL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
+    <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
+    
+	<atom:link href="http://1138-4EB.github.io/ghdl/tags/exec/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Integrated Development Environments</title>
+      <link>http://1138-4EB.github.io/ghdl/ides/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/ides/</guid>
+      <description>Combined with a GUI-based waveform viewer and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code.
+ https://sourceforge.net/projects/ivi/ : IVI is an interactive and graphical front-end for simulating and debugging designs.  The Developing Environment The tutorials section allows you to get started in setting up the right environment to begin doing your VHDL coding. Any GNU/Linux environment is good. Windows or Apple OS X is also supported by GHDL.</description>
+    </item>
+    
+  </channel>
+</rss>

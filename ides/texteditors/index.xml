@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on GHDL</title>
-    <link>http://1138-4EB.github.io/ghdl/categories/</link>
-    <description>Recent content in Categories on GHDL</description>
+    <title>Text Editors on GHDL</title>
+    <link>http://1138-4EB.github.io/ghdl/ides/texteditors/</link>
+    <description>Recent content in Text Editors on GHDL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
+    <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
     
-	<atom:link href="http://1138-4EB.github.io/ghdl/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://1138-4EB.github.io/ghdl/ides/texteditors/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

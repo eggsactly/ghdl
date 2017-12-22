@@ -2,68 +2,121 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GHDL</title>
-    <link>https://1138-4EB.github.io/ghdl/tags/</link>
+    <link>http://1138-4EB.github.io/ghdl/tags/</link>
     <description>Recent content in Tags on GHDL</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <managingEditor>1138-4EB@users.noreply.github.com (1138-4EB)</managingEditor>
-    <webMaster>1138-4EB@users.noreply.github.com (1138-4EB)</webMaster>
-    <lastBuildDate>Tue, 07 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <language>en-gb</language>
+    <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
+    <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
     
-	<atom:link href="https://1138-4EB.github.io/ghdl/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://1138-4EB.github.io/ghdl/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Bigimg</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/bigimg/</link>
-      <pubDate>Tue, 07 Mar 2017 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/bigimg/</guid>
+      <title>Batch</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/batch/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/batch/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Code</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/code/</link>
-      <pubDate>Tue, 08 Mar 2016 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/code/</guid>
+      <title>Exec</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/exec/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/exec/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Example</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/example/</link>
-      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/example/</guid>
+      <title>Install</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/install/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/install/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Markdown</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/markdown/</link>
-      <pubDate>Fri, 20 Feb 2015 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/markdown/</guid>
+      <title>Interactive</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/interactive/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/interactive/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Math</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/math/</link>
-      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/math/</guid>
+      <title>Package</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/package/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/package/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Photoswipe</title>
-      <link>https://1138-4EB.github.io/ghdl/tags/photoswipe/</link>
-      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
-      <author>1138-4EB@users.noreply.github.com (1138-4EB)</author>
-      <guid>https://1138-4EB.github.io/ghdl/tags/photoswipe/</guid>
+      <title>Play With Docker</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/play-with-docker/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/play-with-docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Release</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/release/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/release/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Shell</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/shell/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/shell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sock</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/sock/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/sock/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Socket</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/socket/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/socket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>X11</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/x11/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/x11/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xserver</title>
+      <link>http://1138-4EB.github.io/ghdl/tags/xserver/</link>
+      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      
+      <guid>http://1138-4EB.github.io/ghdl/tags/xserver/</guid>
       <description></description>
     </item>
     

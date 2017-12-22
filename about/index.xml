@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>GHDL</title>
-    <link>http://1138-4EB.github.io/ghdl/</link>
-    <description>Recent content on GHDL</description>
+    <title>About GHDL on GHDL</title>
+    <link>http://1138-4EB.github.io/ghdl/about/</link>
+    <description>Recent content in About GHDL on GHDL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
     <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
     
-	<atom:link href="http://1138-4EB.github.io/ghdl/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://1138-4EB.github.io/ghdl/about/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title></title>
-      <link>http://1138-4EB.github.io/ghdl/contribute/contribute/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://1138-4EB.github.io/ghdl/contribute/contribute/</guid>
-      <description>Contributing The first step might be to use GHDL and explore it&#39;s possibilities in an own project. If you are new to VHDL, see the :ref:`USING:QuickStart` for an introduction. Furthermore, we encourage you to read :ref:`USING:Invoking`, where the most commonly used options are explained. You can also check the complete :ref:`REF:Command`.
-System Message: ERROR/3 (&amp;lt;stdin&amp;gt;, line 7); backlink
-Unknown interpreted text role &amp;quot;ref&amp;quot;. System Message: ERROR/3 (&amp;lt;stdin&amp;gt;, line 7); backlink</description>
-    </item>
     
     <item>
       <title>About this site</title>
