@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
-    <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 13 Dec 2017 00:56:30 +0100</lastBuildDate>
     
 	<atom:link href="http://1138-4EB.github.io/ghdl/tags/interactive/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Integrated Development Environments</title>
       <link>http://1138-4EB.github.io/ghdl/ides/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/ides/</guid>
       <description>Combined with a GUI-based waveform viewer and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code.

@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright © 2015-2017 , [Tristan Gingold](https://github.com/tgingold) and [contributors](http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors)</copyright>
-    <lastBuildDate>Thu, 21 Dec 2017 13:50:52 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 13 Dec 2017 00:56:30 +0100</lastBuildDate>
     
 	<atom:link href="http://1138-4EB.github.io/ghdl/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Batch</title>
       <link>http://1138-4EB.github.io/ghdl/tags/batch/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/batch/</guid>
       <description></description>
@@ -24,7 +24,7 @@
     <item>
       <title>Exec</title>
       <link>http://1138-4EB.github.io/ghdl/tags/exec/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/exec/</guid>
       <description></description>
@@ -33,7 +33,7 @@
     <item>
       <title>Install</title>
       <link>http://1138-4EB.github.io/ghdl/tags/install/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/install/</guid>
       <description></description>
@@ -42,7 +42,7 @@
     <item>
       <title>Interactive</title>
       <link>http://1138-4EB.github.io/ghdl/tags/interactive/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/interactive/</guid>
       <description></description>
@@ -51,7 +51,7 @@
     <item>
       <title>Package</title>
       <link>http://1138-4EB.github.io/ghdl/tags/package/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/package/</guid>
       <description></description>
@@ -60,7 +60,7 @@
     <item>
       <title>Play With Docker</title>
       <link>http://1138-4EB.github.io/ghdl/tags/play-with-docker/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/play-with-docker/</guid>
       <description></description>
@@ -69,7 +69,7 @@
     <item>
       <title>Release</title>
       <link>http://1138-4EB.github.io/ghdl/tags/release/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/release/</guid>
       <description></description>
@@ -78,7 +78,7 @@
     <item>
       <title>Shell</title>
       <link>http://1138-4EB.github.io/ghdl/tags/shell/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/shell/</guid>
       <description></description>
@@ -87,7 +87,7 @@
     <item>
       <title>Sock</title>
       <link>http://1138-4EB.github.io/ghdl/tags/sock/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/sock/</guid>
       <description></description>
@@ -96,7 +96,7 @@
     <item>
       <title>Socket</title>
       <link>http://1138-4EB.github.io/ghdl/tags/socket/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/socket/</guid>
       <description></description>
@@ -105,7 +105,7 @@
     <item>
       <title>X11</title>
       <link>http://1138-4EB.github.io/ghdl/tags/x11/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/x11/</guid>
       <description></description>
@@ -114,7 +114,7 @@
     <item>
       <title>Xserver</title>
       <link>http://1138-4EB.github.io/ghdl/tags/xserver/</link>
-      <pubDate>Thu, 21 Dec 2017 13:50:52 +0100</pubDate>
+      <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/tags/xserver/</guid>
       <description></description>
