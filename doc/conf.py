@@ -150,13 +150,17 @@ except Exception as ex:
 # a list of builtin themes.
 #html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
-# Override default css to get a larger width for ReadTheDoc build            
-html_context = {                                                             
-    'css_files': [                                                           
-        'https://media.readthedocs.org/css/sphinx_rtd_theme.css',            
-        'https://media.readthedocs.org/css/readthedocs-doc-embed.css',       
-        '_static/theme_overrides.css',                                       
+# Override default css to get a larger width for ReadTheDoc build
+html_context = {
+    'css_files': [
+        'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
+        'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
+        '_static/theme_overrides.css',
     ],
+	'display_github': True,
+    'github_user': 'ghdl',
+    'github_repo': 'ghdl',
+    'github_version': 'master/doc/'
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme

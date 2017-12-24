@@ -6,8 +6,6 @@ SOURCE_BRANCH="builders"
 TARGET_BRANCH="gh-pages"
 REPO=`git config remote.origin.url`
 
-cd ghdl-io
-
 getWiki() {
     printf "\n[GH-PAGES] Clone wiki\n"
     git clone "${REPO%.*}.wiki.git" content/wiki
@@ -23,19 +21,28 @@ getWiki() {
 }
 
 if [ "$DEPLOY" = "" ]; then
+    git fetch --unshallow || true
+    git fetch --all
+    git clone https://github.com/buildthedocs/btd
+    ./btd/btd/build.sh -v "tgingold-master,v0.35,2017-03-01"
+    git checkout "$TRAVIS_BRANCH"
+    mv ../btd_builds/html ghdl-io/static/doc/
+
 #    getWiki
 
     printf "\n[GH-PAGES] Clone the '$TARGET_BRANCH' to 'out' and clean existing contents\n"
     git clone -b "$TARGET_BRANCH" "$REPO" out
     rm -rf out/**/* || exit 0
 
-    cd ..
     set +e
     docker run --rm -t \
       -v /$(pwd):/src \
       -w //src/ghdl-io \
-      ghdl/ext:hugo -DEF -d out
+      ghdl/ext:hugo -DEF -d hugo_out
     set -e
+    cp -r ghdl-io/hugo_out/* out
+
+    rm -rf ghdl-io/static/doc
 else
     # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
     if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
@@ -43,8 +50,8 @@ else
         exit 0
     fi
 
-    mv out ../..
-    cd ../../out
+    mv out ..
+    cd ../out
 
     git config user.name "Travis CI"
     git config user.email "travis@gh-pages"
