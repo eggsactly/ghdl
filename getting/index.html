@@ -267,7 +267,13 @@
   <div>LIST</div>
   
 
+<h2 id="package-managers">Package managers</h2>
+
+<p>Install through the package manager of your choice: apt-get, aptitude, yum, dnf, pacman, chocolatey, brew&hellip; (Help us package GHDL for missing or out-of-date platforms!)</p>
+
 <h2 id="releases">Releases</h2>
+
+<p>Download a release tarball and install it manually.</p>
 
 <h2 id="building">Building</h2>
 
@@ -277,15 +283,36 @@
 
 <h2 id="ready-to-use-docker-images">Ready-to-use docker images</h2>
 
-<h3 id="batch">Batch</h3>
+<ul>
+<li>Docker:
 
-<h3 id="interactive">Interactive</h3>
+<ul>
+<li>Use a docker container as a replacement for a local installation.
 
-<h3 id="graphical">Graphical</h3>
+<ul>
+<li>Batch</li>
+<li>Interactive</li>
+<li>Service and exec</li>
+<li>X server: gtkwave</li>
+</ul></li>
+<li>Play with GHDL in play-with-docker (PWD)
 
-<h3 id="web-lightweigth">Web lightweigth?</h3>
+<ul>
+<li>shell + nano/vim</li>
+<li>shell + nano/vim + web file browser</li>
+<li>shell + web text editor + web file browser</li>
+<li>shell + <a href="https://codemirror.net/">CodeMirror</a> + web file browser</li>
+<li>shell + lightweight web IDE</li>
+<li><a href="https://github.com/eclipse/che/">eclipse/che</a>
 
-<h3 id="eclipse-che">eclipse/che</h3>
+<ul>
+<li><code>docker run --rm -e CHE_PORT=5000 -v /$(pwd)/eclipse_che:/data -v //var/run/docker.sock:/var/run/docker.sock eclipse/che start</code></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>NOTE: any of the play-with-docker cases can be executed in any machine with a running docker daemon, let it be the box of a single developer or a server to be shared in a group. However, web service specific issues such as settings DNS, proxies and/or access control are out of the scope of this article.</p>
 
 <h2 id="build-your-own-docker-images">Build your own docker images</h2>
 
@@ -299,7 +326,7 @@
         <div class="tc light-silver">
   <div class="mb2">
     <div class="lh-copy">Copyright © 2015-2017 , <a href="https://github.com/tgingold">Tristan Gingold</a> and <a href="http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors">contributors</a>.</div>
-    <div>This document was built from <a href="https://github.com/1138-4EB/ghdl/commit/441ca728c33a5453fdfc326a770798a31c1c6f7e">441ca72</a>, in <a href="https://travis-ci.org/ghdl/ghdl">Travis CI</a>, with <a href="https://gohugo.io">Hugo</a> and <a href="http://tachyons.io">Tachyons</a>; and it was deployed to <a href="https://pages.github.com/">GitHub Pages</a> on Dec 22, 2017 at 06:49 (UTC).</div>
+    <div>This document was built from <a href="https://github.com/1138-4EB/ghdl/commit/72d15c050d06146d3b40ab2ef9ffa6bd7ee86a88">72d15c0</a>, in <a href="https://travis-ci.org/ghdl/ghdl">Travis CI</a>, with <a href="https://gohugo.io">Hugo</a> and <a href="http://tachyons.io">Tachyons</a>; and it was deployed to <a href="https://pages.github.com/">GitHub Pages</a> on Dec 24, 2017 at 03:59 (UTC).</div>
   </div>
   <nav class="f6 fw6 ttu tracked light-silver">
     <a class="dim" title="Latest release" href="https://github.com/ghdl/ghdl/releases"><img src="https://img.shields.io/github/commits-since/ghdl/ghdl/latest.svg?style=flat-square"></a>

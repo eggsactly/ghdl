@@ -267,64 +267,45 @@
   <div>LIST</div>
   
 
-<p>Combined with a <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>-based <a href="https://en.wikipedia.org/wiki/Waveform_viewer">waveform viewer</a> and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code.</p>
+<p>Combined with a <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>-based <a href="https://en.wikipedia.org/wiki/Waveform_viewer">waveform viewer</a> and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code. Existing solutions, such as example configurations or useful plugins for well-known editors are summarized here. On top of that, it is the hub for on-going efforts to offer a ready-to-use, free (libre), multiplatform, lightweight and customizable framework in order to let users create their own (standalone) work environment.</p>
+
+<h2 id="external-resource-lists">External resource lists</h2>
+
+<p>There are some other sites that try to list multiple VHDL-related resources. We try not to duplicate content, in order to make it easier for the user. Therefore, you should check these references if you don&rsquo;t find the content you are looking for here:</p>
 
 <ul>
-<li><a href="https://sourceforge.net/projects/ivi/">https://sourceforge.net/projects/ivi/</a> : IVI is an interactive and graphical front-end for simulating and debugging designs.</li>
+<li><a href="https://tams.informatik.uni-hamburg.de/vhdl/index.php?content=07-tools">Universität Hamburg | VHDL-Tools</a></li>
+<li><a href="http://fpgalibre.sourceforge.net/ingles.html">FPGALibre</a></li>
+<li><a href="https://paebbels.github.io/">paebbels.github.io</a></li>
 </ul>
 
-<p>The Developing Environment
-The tutorials section allows you to get started in setting up the right environment to begin doing your VHDL coding. Any GNU/Linux environment is good. Windows or Apple OS X is also supported by GHDL.</p>
-
-<h2 id="ide">IDE</h2>
+<h2 id="standalone-ides">Standalone IDEs</h2>
 
 <ul>
-<li>Install through the package manager of your choice: apt-get, aptitude, yum, dnf, pacman, chocolatey, brew&hellip; (Help us package GHDL for missing platforms!)</li>
-<li>Download a release tarball and install it manually.</li>
-<li>Docker:
-
-<ul>
-<li>Use a docker container as a replacement for a local installation.
-
-<ul>
-<li>Interactive</li>
-<li>Batch</li>
-<li>Service and exec</li>
-<li>X server: gtkwave</li>
-</ul></li>
-<li>Play with GHDL in play-with-docker (PWD)
-
-<ul>
-<li>shell + nano/vim</li>
-<li>shell + nano/vim + web file browser</li>
-<li>shell + web text editor + web file browser</li>
-<li>shell + <a href="https://codemirror.net/">CodeMirror</a> + web file browser</li>
-<li>shell + lightweight web IDE</li>
-<li><a href="https://github.com/eclipse/che/">eclipse/che</a>
-
-<ul>
-<li><code>docker run --rm -e CHE_PORT=5000 -v /$(pwd)/eclipse_che:/data -v //var/run/docker.sock:/var/run/docker.sock eclipse/che start</code></li>
-</ul></li>
-</ul></li>
-</ul></li>
+<li><a href="https://sourceforge.net/projects/umhdl/">sf:umhdl</a>, <em>an educational Integrated Development Environment (IDE) intended for learning digital designing with programmable logic devices using Hardware Description Languages (HDL) through simulation. (&hellip;) acts as a front-end that allows writing code (with syntax highlighting), invokes an external VHDL compiler and simulator (such as GHDL), and displays the result of the simulation graphically as waveforms (invoking to GTKWave)</em>. [GPLv3] [last updated 2016-10-18]</li>
+<li><a href="https://sourceforge.net/projects/ivi/">sf:ivi</a>, <em>a graphical, interactive user-interface to various Open-Source HDL simulators. IVI is transitioning to using the Eclipse application framework.</em> [GPLv2] [last updated 2013-06-04]</li>
+<li><a href="https://sourceforge.net/projects/veditor/">Eclipse Verilog editor</a>, * a plugin for the Eclipse IDE. It provides Verilog(IEEE-1364) and VHDL language specific code viewer, contents outline, code assist etc*. [GPLv2] [last updated 2017-01-31]</li>
 </ul>
 
-<p>NOTE: any of the play-with-docker cases can be executed in any machine with a running docker daemon, let it be the box of a single developer or a server to be shared in a group. However, web service specific issues such as settings DNS, proxies and/or access control are out of the scope of this article.</p>
+<h2 id="web-based-ides">Web-based IDEs</h2>
 
-<h2 id="lightweight-web-ide">Lightweight web IDE</h2>
+<h2 id="elide">ELIDE</h2>
+
+<p><a href="https://github.com/hacdias/filemanager">gh:hacdias/filemanager</a> is a single 5.5MB (zipped, 17MB after extraction) binary written in golang (backend); and <a href="https://vuejs.org/">Vue.js</a> with <a href="https://github.com/codemirror/CodeMirror/">gh:codemirror/CodeMirror</a> (frontend). It allows to explore, edit, move&hellip; files and folders from the browser. It can optionally handle authorization. Because it fits all of the requirements it is used as a base for the customizable framework. See <a href="https://github.com/1138-4EB/elide/wiki/IDE-in-browser">gh:1138-4EB/elide/wiki/IDE-in-browser</a>.</p>
+
+<p>Missing features:</p>
 
 <ul>
-<li>Frontend (Javascript):
+<li>Frontend:
 
 <ul>
-<li>dirtree with right-button/context menu (openbox alike)</li>
-<li><a href="https://github.com/codemirror/CodeMirror/">gh:codemirror/CodeMirror</a></li>
-<li>wavedrom (extended, i.e., interactive vertical/horizontal scroll, zoom, select, cursor, measure, etc&hellip;)</li>
+<li>dirtree</li>
+<li>right-button/context menu (openbox alike)</li>
+<li>Wavedrom (extended, i.e., interactive vertical/horizontal scroll, zoom, select, cursor, measure, etc&hellip;)</li>
 <li>(real-time) diagram generation</li>
-<li>vue.js</li>
-<li>multiwindow/multiscreen support</li>
+<li>multiwindow/multiscreen support?</li>
 </ul></li>
-<li>Backend (golang)
+<li>Backend
 
 <ul>
 <li>task handlers / ghdl runner</li>
@@ -333,9 +314,10 @@ The tutorials section allows you to get started in setting up the right environm
 </ul></li>
 </ul>
 
-<hr />
+<p>You can try the official (vanilla) either natively or inside a docker container. The following command will serve the folder it is executed from:</p>
 
-<p><a href="https://sourceforge.net/projects/umhdl/">https://sourceforge.net/projects/umhdl/</a></p>
+<pre><code>$(command -v winpty) docker run --rm -itv /$(pwd):/srv -p 127.0.0.1:2000:80 hacdias/filemanager -p 80 --no-auth
+</code></pre>
 
   
 
@@ -347,7 +329,7 @@ The tutorials section allows you to get started in setting up the right environm
         <div class="tc light-silver">
   <div class="mb2">
     <div class="lh-copy">Copyright © 2015-2017 , <a href="https://github.com/tgingold">Tristan Gingold</a> and <a href="http://ghdl.readthedocs.io/en/latest/licenses.html#list-of-contributors">contributors</a>.</div>
-    <div>This document was built from <a href="https://github.com/1138-4EB/ghdl/commit/441ca728c33a5453fdfc326a770798a31c1c6f7e">441ca72</a>, in <a href="https://travis-ci.org/ghdl/ghdl">Travis CI</a>, with <a href="https://gohugo.io">Hugo</a> and <a href="http://tachyons.io">Tachyons</a>; and it was deployed to <a href="https://pages.github.com/">GitHub Pages</a> on Dec 22, 2017 at 06:49 (UTC).</div>
+    <div>This document was built from <a href="https://github.com/1138-4EB/ghdl/commit/72d15c050d06146d3b40ab2ef9ffa6bd7ee86a88">72d15c0</a>, in <a href="https://travis-ci.org/ghdl/ghdl">Travis CI</a>, with <a href="https://gohugo.io">Hugo</a> and <a href="http://tachyons.io">Tachyons</a>; and it was deployed to <a href="https://pages.github.com/">GitHub Pages</a> on Dec 24, 2017 at 03:59 (UTC).</div>
   </div>
   <nav class="f6 fw6 ttu tracked light-silver">
     <a class="dim" title="Latest release" href="https://github.com/ghdl/ghdl/releases"><img src="https://img.shields.io/github/commits-since/ghdl/ghdl/latest.svg?style=flat-square"></a>

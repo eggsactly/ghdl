@@ -18,8 +18,7 @@
       <pubDate>Wed, 13 Dec 2017 00:56:30 +0100</pubDate>
       
       <guid>http://1138-4EB.github.io/ghdl/ides/</guid>
-      <description>Combined with a GUI-based waveform viewer and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code.
- https://sourceforge.net/projects/ivi/ : IVI is an interactive and graphical front-end for simulating and debugging designs.  The Developing Environment The tutorials section allows you to get started in setting up the right environment to begin doing your VHDL coding. Any GNU/Linux environment is good. Windows or Apple OS X is also supported by GHDL.</description>
+      <description>Combined with a GUI-based waveform viewer and a good text editor, GHDL is a very powerful tool for writing, testing and simulating your code. Existing solutions, such as example configurations or useful plugins for well-known editors are summarized here. On top of that, it is the hub for on-going efforts to offer a ready-to-use, free (libre), multiplatform, lightweight and customizable framework in order to let users create their own (standalone) work environment.</description>
     </item>
     
   </channel>
