@@ -21,18 +21,19 @@ getWiki() {
 }
 
 if [ "$DEPLOY" = "" ]; then
-    git fetch --unshallow || true
-    git fetch --all
+    git clone -b "$TRAVIS_BRANCH" "$REPO" ../ghdl-full
+    cd ../ghdl-full
+
     git clone https://github.com/buildthedocs/btd
-    ./btd/btd/build.sh -v "tgingold-master,v0.35,2017-03-01"
+    ./btd/btd/build.sh -v "builders,v0.35,v0.34"
     git checkout "$TRAVIS_BRANCH"
     mv ../btd_builds/html ghdl-io/static/doc/
 
 #    getWiki
 
     printf "\n[GH-PAGES] Clone the '$TARGET_BRANCH' to 'out' and clean existing contents\n"
-    git clone -b "$TARGET_BRANCH" "$REPO" out
-    rm -rf out/**/* || exit 0
+    git clone -b "$TARGET_BRANCH" "$REPO" ../out
+    rm -rf ../out/**/* || exit 0
 
     set +e
     docker run --rm -t \
@@ -40,7 +41,7 @@ if [ "$DEPLOY" = "" ]; then
       -w //src/ghdl-io \
       ghdl/ext:hugo -DEF -d hugo_out
     set -e
-    cp -r ghdl-io/hugo_out/* out
+    cp -r ghdl-io/hugo_out/. ../out
 
     rm -rf ghdl-io/static/doc
 else
@@ -50,8 +51,9 @@ else
         exit 0
     fi
 
-    mv out ..
     cd ../out
+    pwd
+    ls -la
 
     git config user.name "Travis CI"
     git config user.email "travis@gh-pages"
