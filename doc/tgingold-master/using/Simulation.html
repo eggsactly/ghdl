@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Simulation and runtime &mdash; GHDL 0.36-dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="https://media.readthedocs.org/css/sphinx_rtd_theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://media.readthedocs.org/css/readthedocs-doc-embed.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="GHDL 0.36-dev documentation" href="../index.html"/>
+        <link rel="next" title="Releases and sources" href="../getting/Releases.html"/>
+        <link rel="prev" title="Invoking GHDL" href="InvokingGHDL.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> GHDL
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.36-dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About GHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses.html">Copyrights | Licenses</a></li>
+</ul>
+<p class="caption"><span class="caption-text">GHDL usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="QuickStartGuide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InvokingGHDL.html">Invoking GHDL</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulation and runtime</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simulation-options">Simulation options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export-waveforms">Export waveforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export-hierarchy-and-references">Export hierarchy and references</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gnu-debugger-gdb">GNU Debugger (GDB)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Getting GHDL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting/Releases.html">Releases and sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building/Building.html">Building GHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building/PrecompileVendorPrimitives.html">Precompile Vendor Primitives</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Implementation References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/CommandReference.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/CodingStyle.html">Coding Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/ImplementationOfVHDL.html">Implementation of VHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/ImplementationOfVITAL.html">Implementation of VITAL</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/Roadmap.html">Roadmap | Future Improvements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/Meta.html">Meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GHDL</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Simulation and runtime</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/using/Simulation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="simulation-and-runtime">
+<span id="using-simulation"></span><h1>Simulation and runtime<a class="headerlink" href="#simulation-and-runtime" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simulation-options">
+<span id="id1"></span><h2>Simulation options<a class="headerlink" href="#simulation-options" title="Permalink to this headline">¶</a></h2>
+<p>In most system environments, it is possible to pass options while
+invoking a program.  Contrary to most programming languages, there is no
+standard method in VHDL to obtain the arguments or to set the exit
+status.</p>
+<p>In GHDL, it is impossible to pass parameters to your design.  A later version
+could do it through the generics interfaces of the top entity.</p>
+<p>However, the GHDL runtime behaviour can be modified with some options; for
+example, it is possible to stop simulation after a certain time.</p>
+<p>The exit status of the simulation is <code class="docutils literal"><span class="pre">EXIT_SUCCESS</span></code> (0) if the
+simulation completes, or <code class="docutils literal"><span class="pre">EXIT_FAILURE</span></code> (1) in case of error
+(assertion failure, overflow or any constraint error).</p>
+<p>Here is the list of the most useful options.  Some debugging options are
+also available, but not described here.  The <a class="reference internal" href="#cmdoption-ghdl-help"><code class="xref std std-option docutils literal"><span class="pre">--help</span></code></a> options lists
+all options available, including the debugging one.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-assert-level">
+<code class="descname">--assert-level&lt;</code><code class="descclassname">=LEVEL&gt;</code><a class="headerlink" href="#cmdoption-ghdl-assert-level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the assertion level at which an assertion violation stops the
+simulation.  <cite>LEVEL</cite> is the name from the <cite>severity_level</cite>
+enumerated type defined in the <cite>standard</cite> package or the
+<code class="docutils literal"><span class="pre">none</span></code> name.</p>
+<p>By default, only assertion violation of severity level <code class="docutils literal"><span class="pre">failure</span></code>
+stops the simulation.</p>
+<p>For example, if <cite>LEVEL</cite> was <code class="docutils literal"><span class="pre">warning</span></code>, any assertion violation
+with severity level <code class="docutils literal"><span class="pre">warning</span></code>, <code class="docutils literal"><span class="pre">error</span></code> or <code class="docutils literal"><span class="pre">failure</span></code> would
+stop simulation, but the assertion violation at the <code class="docutils literal"><span class="pre">note</span></code> severity
+level would only display a message.</p>
+<p>Option <code class="xref std std-option docutils literal"><span class="pre">--assert-level=none</span></code> prevents any assertion violation to stop
+simulation.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-ieee-asserts">
+<code class="descname">--ieee-asserts&lt;</code><code class="descclassname">=POLICY&gt;</code><a class="headerlink" href="#cmdoption-ghdl-ieee-asserts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select how the assertions from <code class="docutils literal"><span class="pre">ieee</span></code> units are
+handled. <cite>POLICY</cite> can be <code class="docutils literal"><span class="pre">enable</span></code> (the default),
+<code class="docutils literal"><span class="pre">disable</span></code> which disables all assertion from <code class="docutils literal"><span class="pre">ieee</span></code> packages
+and <code class="docutils literal"><span class="pre">disable-at-0</span></code> which disables only at start of simulation.</p>
+<p>This option can be useful to avoid assertion message from
+<code class="docutils literal"><span class="pre">ieee.numeric_std</span></code> (and other <code class="docutils literal"><span class="pre">ieee</span></code> packages).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-stop-time">
+<code class="descname">--stop-time&lt;</code><code class="descclassname">=TIME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-stop-time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the simulation after <code class="docutils literal"><span class="pre">TIME</span></code>.  <code class="docutils literal"><span class="pre">TIME</span></code> is expressed as a time
+value, <em>without</em> any space.  The time is the simulation time, not
+the real clock time.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ./my_design --stop-time=10ns
+$ ./my_design --stop-time=ps
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-stop-delta">
+<code class="descname">--stop-delta&lt;</code><code class="descclassname">=N&gt;</code><a class="headerlink" href="#cmdoption-ghdl-stop-delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the simulation after <cite>N</cite> delta cycles in the same current time.</p>
+<span class="target" id="index-0"></span></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-time">
+<code class="descname">--disp-time</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display the time and delta cycle number as simulation advances.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-unbuffered">
+<code class="descname">--unbuffered</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-unbuffered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable buffering on stdout, stderr and files opened in write or append mode (TEXTIO).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-sdf">
+<code class="descname">--sdf&lt;</code><code class="descclassname">=PATH=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-sdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do VITAL annotation on <cite>PATH</cite> with SDF file <code class="file docutils literal"><span class="pre">FILENAME</span></code>.</p>
+<p><cite>PATH</cite> is a path of instances, separated with <code class="docutils literal"><span class="pre">.</span></code> or <code class="docutils literal"><span class="pre">/</span></code>.
+Any separator can be used.  Instances are component instantiation labels,
+generate labels or block labels.  Currently, you cannot use an indexed name.</p>
+<p>Specifying a delay:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">sdf</span><span class="o">=</span><span class="nb">min</span><span class="o">=</span><span class="n">PATH</span><span class="o">=</span><span class="n">FILENAME</span>
+<span class="o">--</span><span class="n">sdf</span><span class="o">=</span><span class="n">typ</span><span class="o">=</span><span class="n">PATH</span><span class="o">=</span><span class="n">FILENAME</span>
+<span class="o">--</span><span class="n">sdf</span><span class="o">=</span><span class="nb">max</span><span class="o">=</span><span class="n">PATH</span><span class="o">=</span><span class="n">FILENAME</span>
+</pre></div>
+</div>
+<p>If the option contains a type of delay, that is <code class="docutils literal"><span class="pre">min=</span></code>,
+<code class="docutils literal"><span class="pre">typ=</span></code> or <code class="docutils literal"><span class="pre">max=</span></code>, the annotator use respectively minimum,
+typical or maximum values.  If the option does not contain a type of delay,
+the annotator use the typical delay.</p>
+<p>See section ‘<a class="reference internal" href="../references/ImplementationOfVITAL.html#backannotation"><span class="std std-ref">Backannotation</span></a>’, for more details.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-vpi">
+<code class="descname">--vpi&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-vpi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Load VPI module.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-vpi-trace">
+<code class="descname">--vpi-trace&lt;</code><code class="descclassname">=FILE&gt;</code><a class="headerlink" href="#cmdoption-ghdl-vpi-trace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Trace vpi calls to FILE.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-help">
+<code class="descname">--help</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a short description of the options accepted by the runtime library.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="export-waveforms">
+<span id="export-waves"></span><h2>Export waveforms<a class="headerlink" href="#export-waveforms" title="Permalink to this headline">¶</a></h2>
+<dl class="option">
+<dt id="cmdoption-ghdl-read-wave-opt">
+<code class="descname">--read-wave-opt</code><code class="descclassname">=&lt;FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-read-wave-opt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signals to be dumped to the wave file according to the wave option
+file provided.</p>
+<p>Here is a description of the wave option file format currently supported</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ version = 1.1  # Optional
+
+# Path format for signals in packages :
+my_pkg.global_signal_a
+
+# Path format for signals in entities :
+/top/sub/clk
+
+# Dumps every signals named reset in first level sub entities of top
+/top/*/reset
+
+# Dumps every signals named reset in recursive sub entities of top
+/top/**/reset
+
+# Dump every signals of sub2 which could be anywhere in design except on
+# top level
+/**/sub2/*
+
+# Dump every signals of sub3 which must be a first level sub entity of the
+# top level
+/*/sub3/*
+
+# Dump every signals of the first level sub entities of sub3 (but not
+# those of sub3)
+/**/sub3/*/*
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-write-wave-opt">
+<code class="descname">--write-wave-opt</code><code class="descclassname">=&lt;FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-write-wave-opt" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the wave option file doesn’t exist, creates it with all the signals of
+the design. Otherwise throws an error, because it won’t erase an existing
+file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-vcd">
+<code class="descname">--vcd&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-vcd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-vcdgz">
+<code class="descname">--vcdgz&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-vcdgz" title="Permalink to this definition">¶</a></dt>
+<dd><span class="target" id="index-1"></span><span class="target" id="index-2"></span><p id="index-3">Option <code class="xref std std-option docutils literal"><span class="pre">--vcd</span></code> dumps into the VCD file <cite>FILENAME</cite> the signal
+values before each non-delta cycle.  If <cite>FILENAME</cite> is <code class="docutils literal"><span class="pre">-</span></code>,
+then the standard output is used, otherwise a file is created or
+overwritten.</p>
+<p>The <code class="xref std std-option docutils literal"><span class="pre">--vcdgz</span></code> option is the same as the <em>–vcd</em> option,
+but the output is compressed using the <cite>zlib</cite> (<cite>gzip</cite>
+compression).  However, you can’t use the <code class="docutils literal"><span class="pre">-</span></code> filename.
+Furthermore, only one VCD file can be written.</p>
+<p><em class="dfn">VCD</em> (value change dump) is a file format defined
+by the <cite>verilog</cite> standard and used by virtually any wave viewer.</p>
+<p>Since it comes from <cite>verilog</cite>, only a few VHDL types can be dumped.  GHDL
+dumps only signals whose base type is of the following:</p>
+<ul class="simple">
+<li>types defined in the <code class="docutils literal"><span class="pre">std.standard</span></code> package:</li>
+<li><code class="docutils literal"><span class="pre">bit</span></code></li>
+<li><code class="docutils literal"><span class="pre">bit_vector</span></code></li>
+<li>types defined in the <code class="docutils literal"><span class="pre">ieee.std_logic_1164</span></code> package:</li>
+<li><code class="docutils literal"><span class="pre">std_ulogic</span></code></li>
+<li><code class="docutils literal"><span class="pre">std_logic</span></code> (because it is a subtype of <code class="docutils literal"><span class="pre">std_ulogic</span></code>)</li>
+<li><code class="docutils literal"><span class="pre">std_ulogic_vector</span></code></li>
+<li><code class="docutils literal"><span class="pre">std_logic_vector</span></code></li>
+<li>any integer type</li>
+</ul>
+<p>I have successfully used <cite>gtkwave</cite> to view VCD files.</p>
+<p>Currently, there is no way to select signals to be dumped: all signals are
+dumped, which can generate big files.</p>
+<p>It is very unfortunate there is no standard or well-known wave file
+format supporting VHDL types.  If you are aware of such a free format,
+please mail me (<a class="reference internal" href="../contribute.html#reporting-bugs"><span class="std std-ref">Reporting bugs</span></a>).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-vcd-nodate">
+<code class="descname">--vcd-nodate</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-vcd-nodate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not write date in VCD file</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-fst">
+<code class="descname">--fst&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-fst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the waveforms into a <cite>fst</cite>, that can be displayed by
+<cite>gtkwave</cite>. The <cite>fst</cite> files are much smaller than VCD or
+<cite>GHW</cite> files, but it handles only the same signals as the VCD format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-wave">
+<code class="descname">--wave&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-wave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the waveforms into a <cite>ghw</cite> (GHdl Waveform) file.  Currently, all
+the signals are dumped into the waveform file, you cannot select a hierarchy
+of signals to be dumped.</p>
+<p>The format of this file was defined by myself and is not yet completely fixed.
+It may change slightly.  The <code class="docutils literal"><span class="pre">gtkwave</span></code> tool can read the GHW files.</p>
+<p>Contrary to VCD files, any VHDL type can be dumped into a GHW file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="export-hierarchy-and-references">
+<h2>Export hierarchy and references<a class="headerlink" href="#export-hierarchy-and-references" title="Permalink to this headline">¶</a></h2>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-tree">
+<code class="descname">--disp-tree&lt;[</code><code class="descclassname">=KIND]&gt;</code><a class="headerlink" href="#cmdoption-ghdl-disp-tree" title="Permalink to this definition">¶</a></dt>
+<dd><p id="index-4">Display the design hierarchy as a tree of instantiated design entities.
+This may be useful to understand the structure of a complex
+design. <cite>KIND</cite> is optional, but if set must be one of:</p>
+<ul class="simple">
+<li>none
+Do not display hierarchy.  Same as if the option was not present.</li>
+<li>inst
+Display entities, architectures, instances, blocks and generates statements.</li>
+<li>proc
+Like <code class="docutils literal"><span class="pre">inst</span></code> but also display processes.</li>
+<li>port
+Like <code class="docutils literal"><span class="pre">proc</span></code> but display ports and signals too.
+If <cite>KIND</cite> is not specified, the hierarchy is displayed with the
+<code class="docutils literal"><span class="pre">port</span></code> mode.</li>
+</ul>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-no-run">
+<code class="descname">--no-run</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-no-run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the simulation before the first cycle. This may be used with <code class="xref std std-option docutils literal"><span class="pre">--disp-tree</span></code> to display the tree without simulating the whole design. This option actually elaborates the design, so it will catch any bound error in port maps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ghdl-xref-html">
+<code class="descname">--xref-html</code><code class="descclassname"> &lt;[options] file...&gt;</code><a class="headerlink" href="#cmdoption-ghdl-xref-html" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>To easily navigate through your sources, you may generate cross-references. This command generates an html file for each <code class="docutils literal"><span class="pre">file</span></code> given in the command line, with syntax highlighting and full cross-reference: every identifier is a link to its declaration. Besides, an index of the files is created too.</p>
+<p>The set of <code class="docutils literal"><span class="pre">file</span></code> are analyzed, and then, if the analysis is successful, html files are generated in the directory specified by the <code class="xref std std-option docutils literal"><span class="pre">-o</span></code> option, or <code class="file docutils literal"><span class="pre">html/</span></code> directory by default.</p>
+<ul class="simple">
+<li>If the option <code class="xref std std-option docutils literal"><span class="pre">--format=html2</span></code> is specified, then the generated html files follow the HTML 2.0 standard, and colours are specified with <cite>&lt;FONT&gt;</cite> tags. However, colours are hard-coded.</li>
+<li>If the option <code class="xref std std-option docutils literal"><span class="pre">--format=css</span></code> is specified, then the generated html files follow the HTML 4.0 standard, and use the CSS-1 file <code class="file docutils literal"><span class="pre">ghdl.css</span></code> to specify colours. This file is generated only if it does not already exist (it is never overwritten) and can be customized by the user to change colours or appearance. Refer to a generated file and its comments for more information.</li>
+</ul>
+<dl class="option">
+<dt id="cmdoption-ghdl-psl-report">
+<code class="descname">--psl-report&lt;</code><code class="descclassname">=FILENAME&gt;</code><a class="headerlink" href="#cmdoption-ghdl-psl-report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Write a report for PSL at the end of simulation. For each PSL cover and assert statements, the name, source location and whether it passed or failed is reported. The file is written using the JSON format, but still being human readable.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-file-to-xml">
+<code class="descname">--file-to-xml</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-file-to-xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Outputs an XML representation of the decorated syntax tree for the input file and its dependencies. It can be used for VHDL tooling using semantic information, like style checkers, documentation extraction, complexity estimation…</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<ul class="last simple">
+<li>The AST slightly changes from time to time (particularly when new nodes are added for new language features), so be liberal in what is allowed by your tool. Also, the XML can be quite large so consider it only during prototyping.</li>
+<li>Note that at this time there is no XML dump of the elaborated design.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="debugging">
+<span id="index-5"></span><h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<dl class="option">
+<dt id="cmdoption-ghdl-trace-signals">
+<code class="descname">--trace-signals</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-trace-signals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display signals after each cycle.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-trace-processes">
+<code class="descname">--trace-processes</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-trace-processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display process name before each cycle.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-stats">
+<code class="descname">--stats</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display run-time statistics.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-order">
+<code class="descname">--disp-order</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display signals order.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-sources">
+<code class="descname">--disp-sources</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-sources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display sources while displaying signals.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-sig-types">
+<code class="descname">--disp-sig-types</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-sig-types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display signal types.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-signals-map">
+<code class="descname">--disp-signals-map</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-signals-map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display map bw declared signals and internal signals.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-disp-signals-table">
+<code class="descname">--disp-signals-table</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-disp-signals-table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Display internal signals.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-checks">
+<code class="descname">--checks</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-checks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Do internal checks after each process run.</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-activity">
+<code class="descname">--activity&lt;</code><code class="descclassname">=LEVEL&gt;</code><a class="headerlink" href="#cmdoption-ghdl-activity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Watch activity of LEVEL signals: LEVEL is all, min (default) or none (unsafe).</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-dump-rti">
+<code class="descname">--dump-rti</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-dump-rti" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Dump Run Time Information (RTI).</p>
+<dl class="option">
+<dt id="cmdoption-ghdl-bootstrap">
+<code class="descname">--bootstrap</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ghdl-bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Allow <code class="docutils literal"><span class="pre">--work=std</span></code></p>
+<div class="section" id="gnu-debugger-gdb">
+<h3>GNU Debugger (GDB)<a class="headerlink" href="#gnu-debugger-gdb" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning" id="index-6">
+<p class="first admonition-title">Warning</p>
+<p class="last">Debugging VHDL programs using <cite>GDB</cite> is possible only with GCC/LLVM.</p>
+</div>
+<p>GDB is a general purpose debugger for programs compiled by GCC. Currently, there is no VHDL support for GDB. It may be difficult to inspect variables or signals in GDB. However, it is still able to display the stack frame in case of error or to set a breakpoint at a specified line.</p>
+<p>GDB can be useful to precisely catch a runtime error, such as indexing an array beyond its bounds. All error check subprograms call the <code class="docutils literal"><span class="pre">__ghdl_fatal</span></code> procedure. Therefore, to catch runtime error, set a breakpoint like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="k">break</span> <span class="n">__ghdl_fatal</span>
+</pre></div>
+</div>
+<p>When the breakpoint is hit, use the <code class="docutils literal"><span class="pre">where</span></code> or <code class="docutils literal"><span class="pre">bt</span></code> command to display the stack frames.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../getting/Releases.html" class="btn btn-neutral float-right" title="Releases and sources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="InvokingGHDL.html" class="btn btn-neutral" title="Invoking GHDL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Tristan Gingold and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.36-dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

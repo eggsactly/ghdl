@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GHDL implementation of VITAL &#8212; GHDL 0.34 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flaws and bugs report" href="Flaws_and_bugs_report.html" />
+    <link rel="prev" title="GHDL implementation of VHDL" href="GHDL_implementation_of_VHDL.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Flaws_and_bugs_report.html" title="Flaws and bugs report"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GHDL_implementation_of_VHDL.html" title="GHDL implementation of VHDL"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">GHDL 0.34 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ghdl-implementation-of-vital">
+<h1>GHDL implementation of VITAL<a class="headerlink" href="#ghdl-implementation-of-vital" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="index-0"></span><span class="target" id="index-1"></span><p id="index-2">This chapter describes how VITAL is implemented in GHDL.  Support of VITAL is
+really in a preliminary stage.  Do not expect too much of it as now.</p>
+<div class="section" id="vital-packages">
+<span id="id1"></span><h2>VITAL packages<a class="headerlink" href="#vital-packages" title="Permalink to this headline">¶</a></h2>
+<p>The VITAL standard or IEEE 1076.4 was first published in 1995, and revised in
+2000.</p>
+<p>The version of the VITAL packages depends on the VHDL standard.  VITAL
+1995 packages are used with the VHDL 1987 standard, while VITAL 2000
+packages are used with other standards.  This choice is based on the
+requirements of VITAL: VITAL 1995 requires the models follow the VHDL
+1987 standard, while VITAL 2000 requires the models follow VHDL 1993.</p>
+<p>The VITAL 2000 packages were slightly modified so that they conform to
+the VHDL 1993 standard (a few functions are made pure and a few one
+impure).</p>
+</div>
+<div class="section" id="vhdl-restrictions-for-vital">
+<span id="id2"></span><h2>VHDL restrictions for VITAL<a class="headerlink" href="#vhdl-restrictions-for-vital" title="Permalink to this headline">¶</a></h2>
+<p>The VITAL standard (partially) implemented is the IEEE 1076.4 standard
+published in 1995.</p>
+<p>This standard defines restriction of the VHDL language usage on VITAL
+model.  A <em class="dfn">VITAL model</em> is a design unit (entity or architecture)
+decorated by the <cite>VITAL_Level0</cite> or <cite>VITAL_Level1</cite> attribute.
+These attributes are defined in the <cite>ieee.VITAL_Timing</cite> package.</p>
+<p>Currently, only VITAL level 0 checks are implemented.  VITAL level 1 models
+can be analyzed, but GHDL doesn’t check they comply with the VITAL standard.</p>
+<p>Moreover, GHDL doesn’t check (yet) that timing generics are not read inside
+a VITAL level 0 model prior the VITAL annotation.</p>
+<p>The analysis of a non-conformant VITAL model fails.  You can disable the
+checks of VITAL restrictions with the <em>–no-vital-checks</em>.  Even when
+restrictions are not checked, SDF annotation can be performed.</p>
+</div>
+<div class="section" id="backannotation">
+<span id="id3"></span><h2>Backannotation<a class="headerlink" href="#backannotation" title="Permalink to this headline">¶</a></h2>
+<p id="index-3"><em class="dfn">Backannotation</em> is the process of setting VITAL generics with timing
+information provided by an external files.</p>
+<p>The external files must be SDF (Standard Delay Format) files.  GHDL
+supports a tiny subset of SDF version 2.1, other version number can be
+used, provided no features added by the next version are used.</p>
+<p>Hierarchical instance names are not supported. However you can use a list of
+instances.  If there is no instance, the top entity will be annotated and
+the celltype must be the name of the top entity.  If there is at least one
+instance, the last instance name must be a component instantiation label, and
+the celltype must be the name of the component declaration instantiated.</p>
+<p>Instances being annotated are not required to be VITAL compliant.  However
+generics being annotated must follow rules of VITAL (e.g., type must be a
+suitable vital delay type).</p>
+<p>Currently, only timing constraints applying on a timing generic of type
+<cite>VitalDelayType01</cite> has been implemented.  This SDF annotator is
+just a proof of concept.  Features will be added with the following GHDL
+release.</p>
+</div>
+<div class="section" id="negative-constraint-calculation">
+<h2>Negative constraint calculation<a class="headerlink" href="#negative-constraint-calculation" title="Permalink to this headline">¶</a></h2>
+<p>Negative constraint delay adjustment are necessary to handle negative
+constraint such as a negative setup time.  This step is defined in the VITAL
+standard and should occur after backannotation.</p>
+<p>GHDL does not do negative constraint calculation.  It fails to handle models
+with negative constraint.  I hope to be able to add this phase soon.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GHDL implementation of VITAL</a><ul>
+<li><a class="reference internal" href="#vital-packages">VITAL packages</a></li>
+<li><a class="reference internal" href="#vhdl-restrictions-for-vital">VHDL restrictions for VITAL</a></li>
+<li><a class="reference internal" href="#backannotation">Backannotation</a></li>
+<li><a class="reference internal" href="#negative-constraint-calculation">Negative constraint calculation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="GHDL_implementation_of_VHDL.html"
+                        title="previous chapter">GHDL implementation of VHDL</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Flaws_and_bugs_report.html"
+                        title="next chapter">Flaws and bugs report</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GHDL_implementation_of_VITAL.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Flaws_and_bugs_report.html" title="Flaws and bugs report"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GHDL_implementation_of_VHDL.html" title="GHDL implementation of VHDL"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">GHDL 0.34 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Tristan Gingold.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>
