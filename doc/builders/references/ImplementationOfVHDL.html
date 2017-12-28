@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Implementation of VHDL &mdash; GHDL 0.36-dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="https://media.readthedocs.org/css/sphinx_rtd_theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://media.readthedocs.org/css/readthedocs-doc-embed.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="GHDL 0.36-dev documentation" href="../index.html"/>
+        <link rel="next" title="Implementation of VITAL" href="ImplementationOfVITAL.html"/>
+        <link rel="prev" title="Coding Style" href="CodingStyle.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> GHDL
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.36-dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About GHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses.html">Copyrights | Licenses</a></li>
+</ul>
+<p class="caption"><span class="caption-text">GHDL usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../using/QuickStartGuide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../using/InvokingGHDL.html">Invoking GHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../using/Simulation.html">Simulation and runtime</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting GHDL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting/Releases.html">Releases and sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building/Building.html">Building GHDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building/PrecompileVendorPrimitives.html">Precompile Vendor Primitives</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Implementation References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="CommandReference.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CodingStyle.html">Coding Style</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation of VHDL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vhdl-standards">VHDL standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#psl-implementation">PSL implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#source-representation">Source representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#library-database">Library database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#top-entity">Top entity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-vendor-libraries">Using vendor libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interfacing-to-other-languages">Interfacing to other languages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#foreign-declarations">Foreign declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restrictions-on-foreign-declarations">Restrictions on foreign declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linking-with-foreign-object-files">Linking with foreign object files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#starting-a-simulation-from-a-foreign-program">Starting a simulation from a foreign program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linking-with-ada">Linking with Ada</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-grt-from-ada">Using GRT from Ada</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ImplementationOfVITAL.html">Implementation of VITAL</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/Roadmap.html">Roadmap | Future Improvements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/Meta.html">Meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GHDL</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Implementation of VHDL</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/ghdl/ghdl/blob/master/doc/references/ImplementationOfVHDL.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="implementation-of-vhdl">
+<span id="ref-implvhdl"></span><h1>Implementation of VHDL<a class="headerlink" href="#implementation-of-vhdl" title="Permalink to this headline">¶</a></h1>
+<p>This chapter describes several implementation defined aspect of VHDL in GHDL.</p>
+<div class="section" id="vhdl-standards">
+<span id="id1"></span><h2>VHDL standards<a class="headerlink" href="#vhdl-standards" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="index-0"></span><span class="target" id="index-1"></span><span class="target" id="index-2"></span><span class="target" id="index-3"></span><span class="target" id="index-4"></span><span class="target" id="index-5"></span><span class="target" id="index-6"></span><span class="target" id="index-7"></span><span class="target" id="index-8"></span><span class="target" id="index-9"></span><p id="index-10">This is very unfortunate, but there are many versions of the VHDL
+language, and they aren’t backward compatible.</p>
+<p>The VHDL language was first standardized in 1987 by IEEE as IEEE 1076-1987, and
+is commonly referred as VHDL-87. This is certainly the most important version,
+since most of the VHDL tools are still based on this standard.</p>
+<p>Various problems of this first standard have been analyzed by experts groups
+to give reasonable ways of interpreting the unclear portions of the standard.</p>
+<p>VHDL was revised in 1993 by IEEE as IEEE 1076-1993.  This revision is still
+well-known.</p>
+<p>Unfortunately, VHDL-93 is not fully compatible with VHDL-87, i.e. some perfectly
+valid VHDL-87 programs are invalid VHDL-93 programs.  Here are some of the
+reasons:</p>
+<ul class="simple">
+<li>the syntax of file declaration has changed (this is the most visible source
+of incompatibility),</li>
+<li>new keywords were introduced (group, impure, inertial, literal,
+postponed, pure, reject, rol, ror, shared, sla, sll, sra, srl,
+unaffected, xnor),</li>
+<li>some dynamic behaviours have changed (the concatenation is one of them),</li>
+<li>rules have been added.</li>
+</ul>
+<p>Shared variables were replaced by protected types in the 2000 revision of
+the VHDL standard.  This modification is also known as 1076a.  Note that this
+standard is not fully backward compatible with VHDL-93, since the type of a
+shared variable must now be a protected type (there was no such restriction
+before).</p>
+<p>Minors corrections were added by the 2002 revision of the VHDL standard.  This
+revision is not fully backward compatible with VHDL-00 since, for example,
+the value of the <cite>‘instance_name</cite> attribute has slightly changed.</p>
+<p>The latest version is 2008.  Many features have been added, and GHDL
+doesn’t implement all of them.</p>
+<p>You can select the VHDL standard expected by GHDL with the
+<code class="docutils literal"><span class="pre">--std=VER</span></code> option, where <code class="docutils literal"><span class="pre">VER</span></code> is one of the left column of the
+table below:</p>
+<dl class="docutils">
+<dt>87</dt>
+<dd>Select VHDL-87 standard as defined by IEEE 1076-1987.  LRM bugs corrected by
+later revisions are taken into account.</dd>
+<dt>93</dt>
+<dd>Select VHDL-93; VHDL-87 file declarations are not accepted.</dd>
+<dt>93c</dt>
+<dd><p class="first">Select VHDL-93 standard with relaxed rules:</p>
+<ul class="last simple">
+<li>VHDL-87 file declarations are accepted;</li>
+<li>default binding indication rules of VHDL-02 are used.  Default binding rules
+are often used, but they are particularly obscure before VHDL-02.</li>
+</ul>
+</dd>
+<dt>00</dt>
+<dd>Select VHDL-2000 standard, which adds protected types.</dd>
+<dt>02</dt>
+<dd>Select VHDL-2002 standard</dd>
+<dt>08</dt>
+<dd>Select VHDL-2008 standard (partially implemented).</dd>
+</dl>
+<p>The 93, 93c, 00 and 02 standards are considered as compatible: you can
+elaborate a design mixing these standards.  However, 87, 93 and 08 are
+not compatible.</p>
+</div>
+<div class="section" id="psl-implementation">
+<span id="id2"></span><h2>PSL implementation<a class="headerlink" href="#psl-implementation" title="Permalink to this headline">¶</a></h2>
+<p>GHDL understands embedded PSL annotations in VHDL files, but not in
+separate files.</p>
+<p>As PSL annotations are embedded within comments, you must analyze and elaborate
+your design with option <em>-fpsl</em> to enable PSL annotations.</p>
+<p>A PSL assertion statement must appear within a comment that starts
+with the <cite>psl</cite> keyword.  The keyword must be followed (on the
+same line) by a PSL keyword such as <cite>assert</cite> or <cite>default</cite>.
+To continue a PSL statement on the next line, just start a new comment.</p>
+<p>A PSL statement is considered as a process.  So it is not allowed within
+a process.</p>
+<p>All PSL assertions must be clocked (GHDL doesn’t support unclocked assertion).
+Furthermore only one clock per assertion is allowed.</p>
+<p>You can either use a default clock like this:</p>
+<div class="highlight-VHDL"><div class="highlight"><pre><span></span><span class="c1">-- psl default clock is rising_edge (CLK);</span>
+<span class="c1">-- psl assert always</span>
+<span class="c1">--   a -&gt; eventually! b;</span>
+</pre></div>
+</div>
+<p>or use a clocked expression (note the use of parenthesis):</p>
+<div class="highlight-VHDL"><div class="highlight"><pre><span></span><span class="c1">-- psl assert (always a -&gt; next[3](b)) @rising_edge (clk);</span>
+</pre></div>
+</div>
+<p>Of course only the simple subset of PSL is allowed.</p>
+<p>Currently the built-in functions are not implemented.</p>
+</div>
+<div class="section" id="source-representation">
+<h2>Source representation<a class="headerlink" href="#source-representation" title="Permalink to this headline">¶</a></h2>
+<p>According to the VHDL standard, design units (i.e. entities,
+architectures, packages, package bodies and configurations) may be
+independently analyzed.</p>
+<p>Several design units may be grouped into a design file.</p>
+<p>In GHDL, a system file represents a design file.  That is, a file compiled by
+GHDL may contain one or more design units.</p>
+<p>It is common to have several design units in a design file.</p>
+<p>GHDL does not impose any restriction on the name of a design file
+(except that the filename may not contain any control character or
+spaces).</p>
+<p>GHDL do not keep a binary representation of the design units analyzed like
+other VHDL analyzers.  The sources of the design units are re-read when
+needed (for example, an entity is re-read when one of its architecture is
+analyzed).  Therefore, if you delete or modify a source file of a unit
+analyzed, GHDL will refuse to use it.</p>
+</div>
+<div class="section" id="library-database">
+<span id="id3"></span><h2>Library database<a class="headerlink" href="#library-database" title="Permalink to this headline">¶</a></h2>
+<p>Each design unit analyzed is placed into a design library.  By default,
+the name of this design library is <code class="docutils literal"><span class="pre">work</span></code>; however, this can be
+changed with the <code class="xref std std-option docutils literal"><span class="pre">--work=NAME</span></code> option of GHDL.</p>
+<p>To keep the list of design units in a design library, GHDL creates
+library files.  The name of these files is <code class="file docutils literal"><span class="pre">NAME-objVER.cf</span></code>, where
+<cite>NAME</cite> is the name of the library, and <cite>VER</cite> the VHDL version (87,
+93 or 08) used to analyze the design units.</p>
+<p>You don’t have to know how to read a library file.  You can display it
+using the <em>-d</em> of <cite>ghdl</cite>.  The file contains the name of the
+design units, as well as the location and the dependencies.</p>
+<p>The format may change with the next version of GHDL.</p>
+</div>
+<div class="section" id="top-entity">
+<span id="id4"></span><h2>Top entity<a class="headerlink" href="#top-entity" title="Permalink to this headline">¶</a></h2>
+<p>There are some restrictions on the entity being at the apex of a design
+hierarchy:</p>
+<ul class="simple">
+<li>The generic must have a default value, and the value of a generic is its
+default value;</li>
+<li>The ports type must be constrained.</li>
+</ul>
+</div>
+<div class="section" id="using-vendor-libraries">
+<h2>Using vendor libraries<a class="headerlink" href="#using-vendor-libraries" title="Permalink to this headline">¶</a></h2>
+<p>Many vendors libraries have been analyzed with GHDL.  There are
+usually no problems.  Be sure to use the <code class="xref std std-option docutils literal"><span class="pre">--work=</span></code> option.
+However, some problems have been encountered.</p>
+<p>GHDL follows the VHDL LRM (the manual which defines VHDL) more
+strictly than other VHDL tools.  You could try to relax the
+restrictions by using the <code class="xref std std-option docutils literal"><span class="pre">--std=93c</span></code>, <code class="xref std std-option docutils literal"><span class="pre">-fexplicit</span></code>,
+<code class="xref std std-option docutils literal"><span class="pre">-frelaxed-rules</span></code> and <code class="xref std std-option docutils literal"><span class="pre">--warn-no-vital-generic</span></code>.</p>
+</div>
+<div class="section" id="interfacing-to-other-languages">
+<h2>Interfacing to other languages<a class="headerlink" href="#interfacing-to-other-languages" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="index-11"></span><span class="target" id="index-12"></span><span class="target" id="index-13"></span><span class="target" id="index-14"></span><p id="index-15">Interfacing with foreign languages is possible only on GNU/Linux systems.</p>
+<p>You can define a subprogram in a foreign language (such as <cite>C</cite> or
+<cite>Ada</cite>) and import it in a VHDL design.</p>
+<div class="section" id="foreign-declarations">
+<h3>Foreign declarations<a class="headerlink" href="#foreign-declarations" title="Permalink to this headline">¶</a></h3>
+<p>Only subprograms (functions or procedures) can be imported, using the foreign
+attribute.  In this example, the <cite>sin</cite> function is imported:</p>
+<div class="highlight-VHDL"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="n">math</span> <span class="k">is</span>
+  <span class="k">function</span> <span class="n">sin</span> <span class="p">(</span><span class="n">v</span> <span class="o">:</span> <span class="n">real</span><span class="p">)</span> <span class="k">return</span> <span class="n">real</span><span class="p">;</span>
+  <span class="k">attribute</span> <span class="n">foreign</span> <span class="k">of</span> <span class="n">sin</span> <span class="o">:</span> <span class="k">function</span> <span class="k">is</span> <span class="s">&quot;VHPIDIRECT sin&quot;</span><span class="p">;</span>
+<span class="k">end</span> <span class="nc">math</span><span class="p">;</span>
+
+<span class="k">package</span> <span class="k">body</span> <span class="n">math</span> <span class="k">is</span>
+  <span class="k">function</span> <span class="n">sin</span> <span class="p">(</span><span class="n">v</span> <span class="o">:</span> <span class="n">real</span><span class="p">)</span> <span class="k">return</span> <span class="n">real</span> <span class="k">is</span>
+  <span class="k">begin</span>
+    <span class="k">assert</span> <span class="n">false</span> <span class="k">severity</span> <span class="n">failure</span><span class="p">;</span>
+  <span class="k">end</span> <span class="nc">sin</span><span class="p">;</span>
+<span class="k">end</span> <span class="nc">math</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A subprogram is made foreign if the <cite>foreign</cite> attribute decorates
+it.  This attribute is declared in the 1993 revision of the
+<code class="docutils literal"><span class="pre">std.standard</span></code> package.  Therefore, you cannot use this feature in
+VHDL 1987.</p>
+<p>The decoration is achieved through an attribute specification.  The
+attribute specification must be in the same declarative part as the
+subprogram and must be after it.  This is a general rule for specifications.
+The value of the specification must be a locally static string.</p>
+<p>Even when a subprogram is foreign, its body must be present.  However, since
+it won’t be called, you can made it empty or simply but an assertion.</p>
+<p>The value of the attribute must start with <code class="docutils literal"><span class="pre">VHPIDIRECT</span></code> (an
+upper-case keyword followed by one or more blanks).  The linkage name of the
+subprogram follows.</p>
+</div>
+<div class="section" id="restrictions-on-foreign-declarations">
+<span id="id5"></span><h3>Restrictions on foreign declarations<a class="headerlink" href="#restrictions-on-foreign-declarations" title="Permalink to this headline">¶</a></h3>
+<p>Any subprogram can be imported.  GHDL puts no restrictions on foreign
+subprograms.  However, the representation of a type or of an interface in a
+foreign language may be obscure.  Most of non-composite types are easily imported:</p>
+<dl class="docutils">
+<dt><em>integer types</em></dt>
+<dd>They are represented on a 32 bits word.  This generally corresponds to
+<cite>int</cite> for <cite>C</cite> or <cite>Integer</cite> for <cite>Ada</cite>.</dd>
+<dt><em>physical types</em></dt>
+<dd>They are represented on a 64 bits word.  This generally corresponds to the
+<cite>long long</cite> for <cite>C</cite> or <cite>Long_Long_Integer</cite> for <cite>Ada</cite>.</dd>
+<dt><em>floating point types</em></dt>
+<dd>They are represented on a 64 bits floating point word.  This generally
+corresponds to <cite>double</cite> for <cite>C</cite> or <cite>Long_Float</cite> for <cite>Ada</cite>.</dd>
+<dt><em>enumeration types</em></dt>
+<dd>They are represented on 8 bits or 32 bits word, if the number of literals is
+greater than 256.  There is no corresponding C types, since arguments are
+not promoted.</dd>
+</dl>
+<p>Non-composite types are passed by value.  For the <cite>in</cite> mode, this
+corresponds to the <cite>C</cite> or <cite>Ada</cite> mechanism.  The <cite>out</cite> and
+<cite>inout</cite> interfaces of non-composite types are gathered in a record
+and this record is passed by reference as the first argument to the
+subprogram.  As a consequence, you shouldn’t use <cite>in</cite> and
+<cite>inout</cite> modes in foreign subprograms, since they are not portable.</p>
+<p>Records are represented like a <cite>C</cite> structure and are passed by reference
+to subprograms.</p>
+<p>Arrays with static bounds are represented like a <cite>C</cite> array, whose
+length is the number of elements, and are passed by reference to subprograms.</p>
+<p>Unconstrained array are represented by a fat pointer.  Do not use unconstrained
+arrays in foreign subprograms.</p>
+<p>Accesses to an unconstrained array is a fat pointer.  Other accesses correspond to an address and are passed to a subprogram like other non-composite types.</p>
+<p>Files are represented by a 32 bits word, which corresponds to an index
+in a table.</p>
+</div>
+<div class="section" id="linking-with-foreign-object-files">
+<span id="id6"></span><h3>Linking with foreign object files<a class="headerlink" href="#linking-with-foreign-object-files" title="Permalink to this headline">¶</a></h3>
+<p>You may add additional files or options during the link using the
+<em>-Wl,</em> of <cite>GHDL</cite>, as described in <span class="xref std std-ref">Elaboration_command</span>.
+For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ghdl</span> <span class="o">-</span><span class="n">e</span> <span class="o">-</span><span class="n">Wl</span><span class="p">,</span><span class="o">-</span><span class="n">lm</span> <span class="n">math_tb</span>
+</pre></div>
+</div>
+<p>will create the <code class="file docutils literal"><span class="pre">math_tb</span></code> executable with the <code class="file docutils literal"><span class="pre">lm</span></code> (mathematical)
+library.</p>
+<p>Note the <code class="file docutils literal"><span class="pre">c</span></code> library is always linked with an executable.</p>
+</div>
+<div class="section" id="starting-a-simulation-from-a-foreign-program">
+<span id="id7"></span><h3>Starting a simulation from a foreign program<a class="headerlink" href="#starting-a-simulation-from-a-foreign-program" title="Permalink to this headline">¶</a></h3>
+<p>You may run your design from an external program.  You just have to call
+the <code class="docutils literal"><span class="pre">ghdl_main</span></code> function which can be defined:</p>
+<p>in C:</p>
+<div class="highlight-C"><div class="highlight"><pre><span></span><span class="k">extern</span> <span class="kt">int</span> <span class="nf">ghdl_main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>in Ada:</p>
+<div class="highlight-Ada"><div class="highlight"><pre><span></span><span class="kn">with</span> <span class="nn">System</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="kd">function</span> <span class="nf">Ghdl_Main</span> <span class="p">(</span><span class="nv">Argc</span> <span class="p">: </span><span class="nv">Integer</span><span class="p">;</span> <span class="nv">Argv</span> <span class="p">: </span><span class="nv">System</span><span class="p">.</span><span class="nv">Address</span><span class="p">)</span>
+   <span class="kr">return</span> <span class="kt">Integer</span><span class="p">;</span>
+<span class="kr">pragma</span> <span class="cp">import</span> <span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">Ghdl_Main</span><span class="p">,</span> <span class="s">&quot;ghdl_main&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function must be called once, and returns 0 at the end of the simulation.
+In case of failure, this function does not return.  This has to be fixed.</p>
+</div>
+<div class="section" id="linking-with-ada">
+<span id="id8"></span><h3>Linking with Ada<a class="headerlink" href="#linking-with-ada" title="Permalink to this headline">¶</a></h3>
+<p>As explained previously in <a class="reference internal" href="#starting-a-simulation-from-a-foreign-program"><span class="std std-ref">Starting a simulation from a foreign program</span></a>,
+you can start a simulation from an <cite>Ada</cite> program.  However the build
+process is not trivial: you have to elaborate your <cite>Ada</cite> program and your
+<cite>VHDL</cite> design.</p>
+<p>First, you have to analyze all your design files.  In this example, we
+suppose there is only one design file, <code class="file docutils literal"><span class="pre">design.vhdl</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ghdl -a design.vhdl
+</pre></div>
+</div>
+<p>Then, bind your design.  In this example, we suppose the entity at the
+design apex is <code class="docutils literal"><span class="pre">design</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ghdl --bind design
+</pre></div>
+</div>
+<p>Finally, compile, bind your <cite>Ada</cite> program at link it with your <cite>VHDL</cite>
+design:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ gnatmake my_prog -largs `ghdl --list-link design`
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-grt-from-ada">
+<h3>Using GRT from Ada<a class="headerlink" href="#using-grt-from-ada" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This topic is only for advanced users knowing how to use <cite>Ada</cite>
+and <cite>GNAT</cite>.  This is provided only for reference, I have tested
+this once before releasing <cite>GHDL</cite> 0.19 but this is not checked at
+each release.</p>
+</div>
+<p>The simulator kernel of <cite>GHDL</cite> named <em class="dfn">GRT</em> is written in
+<cite>Ada95</cite> and contains a very light and slightly adapted version
+of <cite>VHPI</cite>.  Since it is an <cite>Ada</cite> implementation it is
+called <em class="dfn">AVHPI</em>. Although being tough, you may interface to <cite>AVHPI</cite>.</p>
+<p>For using <cite>AVHPI</cite>, you need the sources of <cite>GHDL</cite> and to recompile
+them (at least the <cite>GRT</cite> library).  This library is usually compiled with
+a <cite>No_Run_Time</cite> pragma, so that the user does not need to install the
+<cite>GNAT</cite> runtime library.  However, you certainly want to use the usual
+runtime library and want to avoid this pragma.  For this, reset the
+<cite>GRT_PRAGMA_FLAG</cite> variable.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ make GRT_PRAGMA_FLAG= grt-all
+</pre></div>
+</div>
+<p>Since <cite>GRT</cite> is a self-contained library, you don’t want
+<cite>gnatlink</cite> to fetch individual object files (furthermore this
+doesn’t always work due to tricks used in <cite>GRT</cite>).  For this,
+remove all the object files and make the <code class="file docutils literal"><span class="pre">.ali</span></code> files read-only.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ rm *.o
+$ chmod -w *.ali
+</pre></div>
+</div>
+<p>You may then install the sources files and the <code class="file docutils literal"><span class="pre">.ali</span></code> files.  I have never
+tested this step.</p>
+<p>You are now ready to use it.</p>
+<p>For example, here is an example, <code class="file docutils literal"><span class="pre">test_grt.adb</span></code> which displays the top
+level design name.</p>
+<div class="highlight-Ada"><div class="highlight"><pre><span></span><span class="kn">with</span> <span class="nn">System</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">System</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Grt.Avhpi</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Grt.Avhpi</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ghdl_Main</span><span class="p">;</span>
+
+<span class="kd">procedure</span> <span class="nf">Test_Grt</span> <span class="kr">is</span>
+   <span class="c1">--  VHPI handle.</span>
+   <span class="n">H</span> <span class="p">:</span> <span class="n">VhpiHandleT</span><span class="p">;</span>
+   <span class="n">Status</span> <span class="p">:</span> <span class="kt">Integer</span><span class="p">;</span>
+
+   <span class="c1">--  Name.</span>
+   <span class="n">Name</span> <span class="p">:</span> <span class="kt">String</span> <span class="p">(</span><span class="mi">1</span> <span class="p">..</span> <span class="mi">64</span><span class="p">);</span>
+   <span class="n">Name_Len</span> <span class="p">:</span> <span class="kt">Integer</span><span class="p">;</span>
+<span class="kr">begin</span>
+   <span class="c1">--  Elaborate and run the design.</span>
+   <span class="n">Status</span> <span class="p">:=</span> <span class="n">Ghdl_Main</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Null_Address</span><span class="p">);</span>
+
+   <span class="c1">--  Display the status of the simulation.</span>
+   <span class="n">Put_Line</span> <span class="p">(</span><span class="s">&quot;Status is &quot;</span> <span class="o">&amp;</span> <span class="kt">Integer</span><span class="p">&#39;</span><span class="na">Image</span> <span class="p">(</span><span class="n">Status</span><span class="p">));</span>
+
+   <span class="c1">--  Get the root instance.</span>
+   <span class="n">Get_Root_Inst</span><span class="p">(</span><span class="n">H</span><span class="p">);</span>
+
+   <span class="c1">--  Disp its name using vhpi API.</span>
+   <span class="n">Vhpi_Get_Str</span> <span class="p">(</span><span class="n">VhpiNameP</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Name_Len</span><span class="p">);</span>
+   <span class="n">Put_Line</span> <span class="p">(</span><span class="s">&quot;Root instance name: &quot;</span> <span class="o">&amp;</span> <span class="n">Name</span> <span class="p">(</span><span class="mi">1</span> <span class="p">..</span> <span class="n">Name_Len</span><span class="p">));</span>
+<span class="kr">end</span> <span class="nf">Test_Grt</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>First, analyze and bind your design:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ghdl -a counter.vhdl
+$ ghdl --bind counter
+</pre></div>
+</div>
+<p>Then build the whole:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ gnatmake test_grt -aL`grt_ali_path` -aI`grt_src_path` -largs
+ `ghdl --list-link counter`
+</pre></div>
+</div>
+<p>Finally, run your design:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ ./test_grt
+Status is  0
+Root instance name: counter
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ImplementationOfVITAL.html" class="btn btn-neutral float-right" title="Implementation of VITAL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CodingStyle.html" class="btn btn-neutral" title="Coding Style" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Tristan Gingold and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.36-dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
