@@ -156,7 +156,7 @@ html_context = {
         'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
         'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
         '_static/theme_overrides.css',
-    ],
+    ]
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
