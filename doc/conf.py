@@ -160,16 +160,30 @@ html_context = {
     'display_github': True,
     'github_user': 'ghdl',
     'github_repo': 'ghdl',
-    'github_version': 'master/doc/'
+    'github_version': 'master/doc/',
+    'READTHEDOCS': True,
+    'versions': [ ['builders', '../builders'], ['v0.35', 'v0.35'], ['v0.34', 'v0.34'] ]
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #html_theme_options = {}
+html_theme_options = {
+#    'typekit_id': hiw1hhg,
+#    'canonical_url':
+#    'analytics_id':
+#    'collapse_navigation': False
+#    'sticky_navigation': False
+#    'navigation_depth': 4
+#    'includehidden': True
+#    'logo_only':
+    'display_version': True
+#    'prev_next_buttons_location': bottom
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = [ '_themes']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
