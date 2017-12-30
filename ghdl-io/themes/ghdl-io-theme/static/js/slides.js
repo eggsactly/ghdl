@@ -53,8 +53,27 @@ function toggleSlides(d)
       hide = numActive+numVisible;
       show = numActive;
     }
-    slides[hide].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
-    slides[show].className = "slide active fl w-100 w-third-ns w-50-m pa2";
+    console.log("hide: " + hide + " show: " + show);
+
+    // This if else block scales the carousel width based on the number of slides in it 
+    switch(numVisible){
+      case 1:
+        slides[hide].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
+        slides[show].className = "slide active fl w-100 w-100-ns w-50-m pa2";
+        break;
+      case 2:
+        slides[hide].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
+        slides[show].className = "slide active fl w-100 w-50-ns w-50-m pa2";
+        break;
+      case 3:
+        slides[hide].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
+        slides[show].className = "slide active fl w-100 w-third-ns w-50-m pa2";
+        break;
+      default:
+        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+        break;
+    }
+
     legend[numPrevious].className = "legend o-100";
   }
   legend[numActive].className = "legend o-20";
