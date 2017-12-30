@@ -55,7 +55,7 @@ function toggleSlides(d)
     }
     console.log("hide: " + hide + " show: " + show);
 
-    // This if else block scales the carousel width based on the number of slides in it 
+    // This switch scales the carousel width based on the number of slides in it 
     switch(numVisible){
       case 1:
         slides[hide].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
@@ -84,4 +84,9 @@ function toggleSlides(d)
   numPrevious = numActive;
 }
 //toggleSlides('interval');
-var refreshIntervalId =setInterval(function(){ toggleSlides('interval'); }, 5000);
+
+function init()
+{
+  setInterval(function(){ toggleSlides('interval'); }, 5000);
+}
+

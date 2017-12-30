@@ -62,5 +62,5 @@
 
 {{ define "js" }}
   {{ partial "js.html" . }}
-  <script src="{{ "js/slides.js" | relURL }}"></script>
+  <script src="{{ "js/slides.js" | relURL }}" onload="init()"></script>
 {{ end }}
