@@ -2,28 +2,54 @@ numVisible=2;
 numActive=undefined;
 numPrevious=undefined;
 numDir=1;
-function toggleSlides(d) {
+function toggleSlides(d) 
+{
   //console.log(d);
 
   var slides = $('.slide');
   var lastSlide = slides.length - 1;
   var legend = $('.legend');
   //console.log(numActive);
-  if ( numActive === undefined ) {
-    for (var i = 0; i < numVisible; i++) {
+  if ( numActive === undefined ) 
+  {
+    for (var i = 0; i < numVisible; i++) 
+    {
       slides[i].className = "slide active fl dib w-100 w-third-ns w-50-m pa2";
     }
     numActive = 0;
-  } else {
-    if ( d === 'interval' ) { d = numDir } else { clearInterval(refreshIntervalId); }
+  } 
+  else 
+  {
+    if ( d === 'interval' ) 
+    { 
+      d = numDir 
+    } 
+    else 
+    { 
+      clearInterval(refreshIntervalId); 
+    }
+
     var skip = false;
-    if (( d === -1 ) && (numActive === 0)) { numDir = 1; skip=true; }
-    if (( d === 1 ) && (numActive === (lastSlide-numVisible-1))) { numDir = -1; skip=true; }
-    if (skip === true) { numPrevious = numActive; return; }
+    if (( d === -1 ) && (numActive === 0)) 
+    { 
+      numDir = 1; 
+      skip = true; 
+    }
+    if (( d === 1 ) && (numActive === (lastSlide-numVisible-1))) 
+    { 
+      numDir = -1; 
+      skip=true; 
+    }
+    if (skip === true) 
+    { 
+      numPrevious = numActive; 
+      return; 
+    }
     numActive += d;
     var show = numActive+numVisible-1;
     var hide = numActive-1;
-    if (numPrevious > numActive) {
+    if (numPrevious > numActive) 
+    {
       hide = numActive+numVisible;
       show = numActive;
     }
