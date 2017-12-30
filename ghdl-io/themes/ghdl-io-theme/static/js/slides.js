@@ -1,7 +1,9 @@
-numVisible=2;
+numVisible=3;
 numActive=undefined;
 numPrevious=undefined;
 numDir=1;
+refreshIntervalId = 0;
+
 function toggleSlides(d) 
 {
   //console.log(d);
@@ -10,72 +12,62 @@ function toggleSlides(d)
   var lastSlide = slides.length - 1;
   var legend = $('.legend');
   //console.log(numActive);
-  if ( numActive === undefined ) 
-  {
-    for (var i = 0; i < numVisible; i++) 
-    {
-      slides[i].className = "slide active fl dib w-100 w-third-ns w-50-m pa2";
-    }
-    numActive = 0;
+
+  if ( d === 'interval' ) 
+  { 
+    d = numDir 
   } 
   else 
-  {
-    if ( d === 'interval' ) 
-    { 
-      d = numDir 
-    } 
-    else 
-    { 
-      clearInterval(refreshIntervalId); 
-    }
-
-    var skip = false;
-    if (( d === -1 ) && (numActive === 0)) 
-    { 
-      numDir = 1; 
-      skip = true; 
-    }
-    if (( d === 1 ) && (numActive === (lastSlide-numVisible-1))) 
-    { 
-      numDir = -1; 
-      skip=true; 
-    }
-    if (skip === true) 
-    { 
-      numPrevious = numActive; 
-      return; 
-    }
-    numActive += d;
-    var show = numActive+numVisible-1;
-    var hide = numActive-1;
-    if (numPrevious > numActive) 
-    {
-      hide = numActive+numVisible;
-      show = numActive;
-    }
-    console.log("hide: " + hide + " show: " + show);
-
-    // This switch scales the carousel width based on the number of slides in it 
-    switch(numVisible){
-      case 1:
-        slides[hide].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
-        slides[show].className = "slide active fl w-100 w-100-ns w-50-m pa2";
-        break;
-      case 2:
-        slides[hide].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
-        slides[show].className = "slide active fl w-100 w-50-ns w-50-m pa2";
-        break;
-      case 3:
-        slides[hide].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
-        slides[show].className = "slide active fl w-100 w-third-ns w-50-m pa2";
-        break;
-      default:
-        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
-        break;
-    }
-
-    legend[numPrevious].className = "legend o-100";
+  { 
+    clearInterval(refreshIntervalId); 
   }
+
+  var skip = false;
+  if (( d === -1 ) && (numActive === 0)) 
+  { 
+    numDir = 1; 
+    skip = true; 
+  }
+  if (( d === 1 ) && (numActive === (lastSlide-numVisible-1))) 
+  { 
+    numDir = -1; 
+    skip=true; 
+  }
+  if (skip === true) 
+  { 
+    numPrevious = numActive; 
+    return; 
+  }
+  numActive += d;
+  var show = numActive+numVisible-1;
+  var hide = numActive-1;
+  if (numPrevious > numActive) 
+  {
+    hide = numActive+numVisible;
+    show = numActive;
+  }
+  //console.log("hide: " + hide + " show: " + show);
+
+  // This switch scales the carousel width based on the number of slides in it 
+  switch(numVisible){
+    case 1:
+      slides[hide].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
+      slides[show].className = "slide active fl w-100 w-100-ns w-50-m pa2";
+      break;
+    case 2:
+      slides[hide].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
+      slides[show].className = "slide active fl w-100 w-50-ns w-50-m pa2";
+      break;
+    case 3:
+      slides[hide].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
+      slides[show].className = "slide active fl w-100 w-third-ns w-50-m pa2";
+      break;
+    default:
+      console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+      break;
+  }
+
+  legend[numPrevious].className = "legend o-100";
   legend[numActive].className = "legend o-20";
 
   // Alternatively, use switchClass from jQueryUI?
@@ -85,8 +77,75 @@ function toggleSlides(d)
 }
 //toggleSlides('interval');
 
+// Taken from https://www.caveofprogramming.com/javascript-tutorial/javascript-html-generating-html-and-embedding-javascript-in-html.html
+// This function takes the formatted HTML
+// and inserts it into the document as
+// 'child' HTML of the specified element.
+function insertHTML(id, html) {
+  var el = document.getElementById(id);
+    
+  if(!el) {
+    alert('Element with id ' + id + ' not found.');
+  }
+    
+  el.innerHTML = html;
+}
+
 function init()
 {
-  setInterval(function(){ toggleSlides('interval'); }, 5000);
+  // Set the width of each frame accordingly
+  var slides = $('.slide');
+  var html = "<label role=\"button\" id=\"btn-left\"  class=\"\" type=\"button\" onclick=\"toggleSlides(-1);\">&#9664;</label>\n";
+
+  // Generate the carousel legend
+  for(var i = 0; i < slides.length-numVisible-1; i++){
+    html += "<label class=\"legend\">&#9679;</label>\n";
+  }
+  html += "<label role=\"button\" id=\"btn-right\" class=\"\" type=\"button\" onclick=\"toggleSlides(1);\">&#9654;</label>\n";
+  insertHTML('carousel-legend', html);
+
+  var legend = $('.legend');
+
+  for (var i = 0; i < slides.length; i++) 
+  {
+    switch(numVisible){
+      case 1:
+        slides[i].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
+        break;
+      case 2:
+        slides[i].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
+        break;
+      case 3:
+        slides[i].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
+        break;
+      default:
+        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+        break;
+    }
+  }
+
+  for (var i = 0; i < numVisible; i++) 
+  {
+    switch(numVisible){
+      case 1:
+        slides[i].className = "slide dn active fl dib w-100 w-100-ns w-50-m pa2";
+        break;
+      case 2:
+        slides[i].className = "slide dn active fl dib w-100 w-50-ns w-50-m pa2";
+        break;
+      case 3:
+        slides[i].className = "slide dn active fl dib w-100 w-third-ns w-50-m pa2";
+        break;
+      default:
+        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+        break;
+    }
+  }
+
+  numActive = 0;
+  numPrevious = 0;
+  legend[0].className = "legend o-20";
+
+  refreshIntervalId = setInterval(function(){ toggleSlides('interval'); }, 5000);
 }
 
