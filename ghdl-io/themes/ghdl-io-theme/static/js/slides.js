@@ -39,4 +39,4 @@ function toggleSlides(d) {
   numPrevious = numActive;
 }
 toggleSlides('interval');
-var refreshIntervalId =setInterval(function(){ toggleSlides('interval'); }, 2250);
+var refreshIntervalId =setInterval(function(){ toggleSlides('interval'); }, 5000);
