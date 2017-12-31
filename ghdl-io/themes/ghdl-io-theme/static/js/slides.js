@@ -51,8 +51,8 @@ function toggleSlides(d)
   // This switch scales the carousel width based on the number of slides in it 
   switch(numVisible){
     case 1:
-      slides[hide].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
-      slides[show].className = "slide active fl w-100 w-100-ns w-50-m pa2";
+      slides[hide].className = "slide dn center w-100 w-100-ns w-50-m pa2";
+      slides[show].className = "slide active center w-100 w-100-ns w-50-m pa2";
       break;
     case 2:
       slides[hide].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
@@ -93,6 +93,22 @@ function insertHTML(id, html) {
 
 function init()
 {
+  // maxWidth is the maximum width of the content in the window, this is hard coded
+  // TODO: Dynamically access the max width of the document by querying the CSS
+  var maxWidth = 1024;
+  // Find the width of the document when it is loaded.
+  var element = document.getElementById('slideshow'),
+    style = window.getComputedStyle(element),
+    loadWidth = style.getPropertyValue('width');
+  console.log(loadWidth);
+  
+  numVisible = Math.floor(parseInt(loadWidth)/(maxWidth/3));
+  if(numVisible < 1)
+  {
+    numVisible = 1;
+  }
+  console.log(numVisible);
+
   // Set the width of each frame accordingly
   var slides = $('.slide');
   var html = "<label role=\"button\" id=\"btn-left\"  class=\"\" type=\"button\" onclick=\"toggleSlides(-1);\">&#9664;</label>\n";
@@ -110,7 +126,7 @@ function init()
   {
     switch(numVisible){
       case 1:
-        slides[i].className = "slide dn fl w-100 w-100-ns w-50-m pa2";
+        slides[i].className = "slide dn center w-100 w-100-ns w-50-m pa2";
         break;
       case 2:
         slides[i].className = "slide dn fl w-100 w-50-ns w-50-m pa2";
@@ -119,7 +135,7 @@ function init()
         slides[i].className = "slide dn fl w-100 w-third-ns w-50-m pa2";
         break;
       default:
-        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+        console.log("ERROR: init: numVisible must be 1, 2 or 3, it is: " + numVisible);
         break;
     }
   }
@@ -128,7 +144,7 @@ function init()
   {
     switch(numVisible){
       case 1:
-        slides[i].className = "slide dn active fl dib w-100 w-100-ns w-50-m pa2";
+        slides[i].className = "slide dn active center dib w-100 w-100-ns w-50-m pa2";
         break;
       case 2:
         slides[i].className = "slide dn active fl dib w-100 w-50-ns w-50-m pa2";
@@ -137,7 +153,7 @@ function init()
         slides[i].className = "slide dn active fl dib w-100 w-third-ns w-50-m pa2";
         break;
       default:
-        console.log("ERROR: toggleSlides: numVisible must be 1, 2 or 3, it is: " + numVisible);
+        console.log("ERROR: init: numVisible must be 1, 2 or 3, it is: " + numVisible);
         break;
     }
   }
