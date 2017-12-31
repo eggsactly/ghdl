@@ -19,7 +19,7 @@ function toggleSlides(d)
   } 
   else 
   { 
-    clearInterval(refreshIntervalId); 
+    //clearInterval(refreshIntervalId); 
   }
 
   var skip = false;
