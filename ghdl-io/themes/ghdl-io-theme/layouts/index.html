@@ -1,10 +1,10 @@
 {{ define "header" }}
 <nav class="center mw8-l flex items-center justify-between f5 b light-silver">
   <div class="flex items-center">
-    <a class="dim" href="{{ "/" | relURL }}"><img src="{{ "/img/logo.svg" | relURL }}" class="h2 dib mr3" alt="GHDL"></a>
+    <a href="{{ "/" | relURL }}"><img src="{{ "/img/logo.svg" | relURL }}" class="h3 dim dib mr3" alt="GHDL"></a>
     <nav class="f6 b ttu tracked light-silver">
       {{ range .Site.Menus.home }}
-        <a class="link dib mr2 dim" href="{{ .URL | relURL }}" title="{{.Pre}}">{{.Name}}</a>
+        <a class="link dib mr2 dim pa3" href="{{ .URL | relURL }}" title="{{.Pre}}">{{.Name}}</a>
       {{ end }}
 
     </nav>
