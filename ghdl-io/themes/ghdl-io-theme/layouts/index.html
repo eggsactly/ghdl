@@ -22,7 +22,7 @@
 <div class=" flex-grow-1 tc">
   <main role="main" class="center moon-gray mw8-l flex flex-column justify-around pa0 ma0"> <!-- overflow-y-auto h-100 v-mid tc ph4-l-->
 <!--dt w-100 -->
-    <div class="light-gray flex-grow-1 flex-shrink-1 flex flex-column justify-center h5 v-mid">
+    <div class="light-gray flex-grow-1 flex-shrink-1 flex flex-column justify-center v-mid ph5">
       <h1 class="f1 f-6-m f-6-l fw6 tc mv1">GHDL</h1>
       <h1 class="f4 f1-m f2-l fw6 tc mv0">where VHDL meets gcc</h1>
     </div>
@@ -42,14 +42,16 @@
     </div>
     <div class="flex-grow-1 w-100"></div>
     <div class="flex items-center w-100 mb3">
+      <div class="fl w-100 h-auto">
       {{ range .Params.Notes }}
-      <div class="fl w-100 w-50-ns w-50-m pa2 h-100">
-        <div class="pa3 h-100 flex flex-column justify-between ba b--light-blue">
-          <div class="fles-grow-1 mb2">{{ .text | markdownify }}</div>
-          <div><a class="f6 link dim ba ph3 pv2 mb1 dib" href="{{.target}}">{{.link}}</a></div>
+        <div class="fl w-50-ns pa3 h-auto">
+          <div class="fl pa3 h-auto flex flex-column justify-between ba b--light-blue">
+            <div class="fles-grow-1 mb2">{{ .text | markdownify }}</div>
+            <div><a class="f6 link dim ba ph3 pv2 mb1 dib" href="{{.target}}">{{.link}}</a></div>
+          </div>
         </div>
-      </div>
       {{end}}
+      </div>
     </div>
 </main>
 </div>
