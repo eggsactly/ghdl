@@ -4,6 +4,12 @@ numPrevious=undefined;
 numDir=1;
 refreshIntervalId = 0;
 
+// maxWidth is the maximum width of the content in the window, this is hard coded
+// TODO: Dynamically access the max width of the document by querying the CSS
+var maxWidth = 1024;
+
+// Toggle slides gets called based on a timer, when it is called it rotates
+// the carousel by 1 slide
 function toggleSlides(d) 
 {
   //console.log(d);
@@ -91,11 +97,26 @@ function insertHTML(id, html) {
   el.innerHTML = html;
 }
 
+// Init is called when the page is loaded, it sets up the carousel and sets a 
+// 5 second refresh period
 function init()
 {
-  // maxWidth is the maximum width of the content in the window, this is hard coded
-  // TODO: Dynamically access the max width of the document by querying the CSS
-  var maxWidth = 1024;
+  setUpCarousel();
+  refreshIntervalId = setInterval(function(){ toggleSlides('interval'); }, 5000);
+}
+
+// Everytime the window changes size we need to recalculate everything for the carousel
+function resizeDetect()
+{
+  setUpCarousel()
+}
+
+// setUpCarousel initializes the content carousel in the middle of the page
+// it calculates how many slides will be presented at a time based on the width
+// of the page. 
+// This function is called on init and whenever the window is resized
+function setUpCarousel()
+{
   // Find the width of the document when it is loaded.
   var element = document.getElementById('slideshow'),
     style = window.getComputedStyle(element),
@@ -162,6 +183,4 @@ function init()
   numPrevious = 0;
   legend[0].className = "legend o-20";
 
-  refreshIntervalId = setInterval(function(){ toggleSlides('interval'); }, 5000);
 }
-
