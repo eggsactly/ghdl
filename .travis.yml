@@ -59,7 +59,7 @@ stages:
 #  - create ghdl/build and ghdl/run images
 #  - test
 #  - collect ghdl/pkg images and build ghdl/pkg:all
-#  - extended images
+  - extended images
   - build and update gh-pages
 
 jobs:
