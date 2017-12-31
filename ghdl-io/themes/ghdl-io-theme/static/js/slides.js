@@ -121,14 +121,13 @@ function setUpCarousel()
   var element = document.getElementById('slideshow'),
     style = window.getComputedStyle(element),
     loadWidth = style.getPropertyValue('width');
-  console.log(loadWidth);
   
+  // Calculate the number of visible slides based on window width
   numVisible = Math.floor(parseInt(loadWidth)/(maxWidth/3));
   if(numVisible < 1)
   {
     numVisible = 1;
   }
-  console.log(numVisible);
 
   // Set the width of each frame accordingly
   var slides = $('.slide');
@@ -143,6 +142,7 @@ function setUpCarousel()
 
   var legend = $('.legend');
 
+  // initialze all slides
   for (var i = 0; i < slides.length; i++) 
   {
     switch(numVisible){
@@ -161,6 +161,7 @@ function setUpCarousel()
     }
   }
 
+  // Initialize the visible slides
   for (var i = 0; i < numVisible; i++) 
   {
     switch(numVisible){
@@ -179,6 +180,7 @@ function setUpCarousel()
     }
   }
 
+  // Set up the legend at the bottom
   numActive = 0;
   numPrevious = 0;
   legend[0].className = "legend o-20";
