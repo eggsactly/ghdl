@@ -1,5 +1,7 @@
 FROM ghdl/pkg:stretch-mcode AS stretch-mcode
 
+#---
+
 FROM python:3.6-slim-stretch AS do-vunit
 
 COPY --from=stretch-mcode ./*.tgz /tmp/
@@ -12,6 +14,19 @@ RUN apt-get update -qq \
  && tar -xzf "$GHDL_TGZ" -C /usr/local \
  && rm -f "$GHDL_TGZ"
 
+#---
+
+FROM hacdias/filemanager AS filemanager
+
+FROM do-vunit AS do-ide
+
+COPY --from=filemanager ./filemanager /usr/local/bin/
+COPY --from=filemanager ./config.json /.config.json
+EXPOSE 80/tcp
+ENTRYPOINT ["filemanager"]
+CMD ["--config" "/config.json"]
+
+#---
 
 FROM ghdl/build:stretch-mcode AS build-gtkwave
 
@@ -40,6 +55,7 @@ RUN apt-get update -qq \
  && tar -zcvf /tmp/gtkwave.tgz -C build-dir/usr/local/ . \
  && cd .. && rm -rf gtkwave
 
+#---
 
 FROM do-vunit AS do-vunit-gtkwave
 
