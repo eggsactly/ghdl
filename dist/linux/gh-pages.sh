@@ -20,7 +20,7 @@ getWiki() {
 }
 
 if [ "$DEPLOY" = "" ]; then
-    curl -L https://raw.githubusercontent.com/buildthedocs/btd/master/btd.sh | sh -s build -v "builders,v0.35,v0.34"
+    curl -L https://raw.githubusercontent.com/buildthedocs/btd/master/btd.sh | sh -s build -d -v "builders,v0.35,v0.34"
     mv ../btd_builds/html ghdl-io/static/doc/
 
 #    getWiki
