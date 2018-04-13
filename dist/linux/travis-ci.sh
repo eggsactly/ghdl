@@ -116,7 +116,8 @@ else
     # available in docker (otherwise it will describe as -dirty
     # because this modifies the source file version.in).
     make -f Makefile.in srcdir=. version.tmp
-    cp version.tmp src/version.in
+    sed -e "s/@ghdl_version@/@VER@/" < version.tmp > src/version.in;
+#    cp version.tmp src/version.in
 
     # Run build in docker
     IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
