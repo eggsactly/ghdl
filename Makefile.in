@@ -146,15 +146,15 @@ include $(srcdir)/src/grt/Makefile.inc
 
 version.tmp: $(srcdir)/src/version.in force
 #	Create version.tmp from version.in, using git date/hash
-	if ! test -d $(srcdir)/.git \
-	   || ! desc=`cd $(srcdir); git describe --dirty`; then \
-	  desc="tarball"; \
-        fi; \
-	sed_desc=""; \
-	if [ "$(desc)" != "tarball" ]; then \
-		sed_desc='-e "s/[(].*[)]/($$desc)/"';  \
+	if ! test -d ./.git \
+   || ! desc=`cd .; git describe --dirty`; then \
+  desc="tarball"; \
+  fi; \
+	cp $< $@; \
+	if [ "$$desc" != "tarball" ]; then \
+		sed -i.bak -e "s/[(].*[)]/($$desc)/" $@;  \
 	fi;  \
-	$(SED) $(sed_desc) -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
+  sed -i.bak -e "s/@VER@/@ghdl_version@/" $@; \
 
 version.ads: version.tmp
 #	Change version.ads only if version.tmp has been modified to avoid
