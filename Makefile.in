@@ -151,10 +151,10 @@ version.tmp: $(srcdir)/src/version.in force
 	  desc="tarball"; \
         fi; \
 	sed_desc="" \
-	if [ "$desc != "tarball" ]; then \
+	if [ "$(desc) != "tarball" ]; then \
     sed_desc='-e "s/[(].*[)]/($$desc)/"'  \
 	fi;  \
-	$(SED) $sed_desc -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
+	$(SED) $(sed_desc) -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
 
 version.ads: version.tmp
 #	Change version.ads only if version.tmp has been modified to avoid
