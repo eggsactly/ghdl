@@ -150,9 +150,9 @@ version.tmp: $(srcdir)/src/version.in force
 	   || ! desc=`cd $(srcdir); git describe --dirty`; then \
 	  desc="tarball"; \
         fi; \
-	sed_desc="" \
-	if [ "$(desc) != "tarball" ]; then \
-    sed_desc='-e "s/[(].*[)]/($$desc)/"'  \
+	sed_desc=""; \
+	if [ "$(desc)" != "tarball" ]; then \
+		sed_desc='-e "s/[(].*[)]/($$desc)/"';  \
 	fi;  \
 	$(SED) $(sed_desc) -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
 
