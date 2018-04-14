@@ -198,11 +198,13 @@ package body Sem is
       --  considered to occur immediatly within the declarative region
       --  associated with the entity declaration corresponding to the given
       --  architecture body.
-      if Vhdl_Std >= Vhdl_02 then
+      --
+      --  GHDL: this is only in vhdl-2002.
+      if Vhdl_Std = Vhdl_02 then
          Open_Declarative_Region;
       end if;
       Sem_Block (Arch);
-      if Vhdl_Std >= Vhdl_02 then
+      if Vhdl_Std = Vhdl_02 then
          Close_Declarative_Region;
       end if;
 
@@ -2112,13 +2114,6 @@ package body Sem is
                end;
             end if;
 
-            --  Set All_Sensitized_State in trivial cases.
-            if Get_All_Sensitized_State (Spec) = Unknown
-              and then Get_Callees_List (Subprg) = Null_Iir_List
-            then
-               Set_All_Sensitized_State (Spec, No_Signal);
-            end if;
-
             --  Do not add to Analysis_Check_List as procedures can't
             --  generate purity/wait/all-sensitized errors by themselves.
 
@@ -2131,6 +2126,13 @@ package body Sem is
          when others =>
             Error_Kind ("sem_subprogram_body", Spec);
       end case;
+
+      --  Set All_Sensitized_State in trivial cases.
+      if Get_All_Sensitized_State (Spec) = Unknown
+        and then Get_Callees_List (Subprg) = Null_Iir_List
+      then
+         Set_All_Sensitized_State (Spec, No_Signal);
+      end if;
    end Sem_Subprogram_Body;
 
    --  Status of Update_And_Check_Pure_Wait.

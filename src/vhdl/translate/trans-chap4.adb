@@ -42,22 +42,15 @@ package body Trans.Chap4 is
    function Get_Object_Type (Tinfo : Type_Info_Acc; Kind : Object_Kind_Type)
                                 return O_Tnode is
    begin
-      if Is_Complex_Type (Tinfo) then
-         case Tinfo.Type_Mode is
-            when Type_Mode_Unbounded_Array
-              | Type_Mode_Unbounded_Record =>
-               return Tinfo.Ortho_Type (Kind);
-            when Type_Mode_Record
-               | Type_Mode_Array
-               | Type_Mode_Protected =>
-               --  For a complex type, use a pointer.
-               return Tinfo.Ortho_Ptr_Type (Kind);
-            when others =>
-               raise Internal_Error;
-         end case;
-      else
-         return Tinfo.Ortho_Type (Kind);
-      end if;
+      case Tinfo.Type_Mode is
+         when Type_Mode_Complex_Record
+           | Type_Mode_Complex_Array
+           | Type_Mode_Protected =>
+            --  For a complex type, use a pointer.
+            return Tinfo.Ortho_Ptr_Type (Kind);
+         when others =>
+            return Tinfo.Ortho_Type (Kind);
+      end case;
    end Get_Object_Type;
 
    --  Return the pointer type for Tinfo.
@@ -309,6 +302,7 @@ package body Trans.Chap4 is
       Type_Info : constant Type_Info_Acc := Get_Type_Info (Var);
       Kind      : constant Object_Kind_Type := Get_Object_Kind (Var);
       Targ      : Mnode;
+      Has_Ref   : Boolean;
    begin
       --  Cannot allocate unconstrained object (since size is unknown).
       pragma Assert (Type_Info.Type_Mode not in Type_Mode_Unbounded);
@@ -318,27 +312,33 @@ package body Trans.Chap4 is
          return;
       end if;
 
-      if Type_Info.C (Kind).Builder_Need_Func
-        and then not Is_Stable (Var)
-      then
-         Targ := Create_Temp (Type_Info, Kind);
-      else
-         Targ := Var;
-      end if;
+      Has_Ref := False;
+      Targ := Var;
 
-      --  Allocate variable.
-      New_Assign_Stmt (M2Lp (Targ),
-                       Gen_Alloc (Alloc_Kind,
-                                  Chap3.Get_Object_Size (Var, Obj_Type),
-                                  Type_Info.Ortho_Ptr_Type (Kind)));
+      if not Is_Static_Type (Type_Info) then
+         if Type_Info.C (Kind).Builder_Need_Func
+           and then not Is_Stable (Var)
+         then
+            --  Need a stable reference...
+            Targ := Create_Temp (Type_Info, Kind);
+            Has_Ref := True;
+         end if;
+
+         --  Allocate variable.
+         New_Assign_Stmt (M2Lp (Targ),
+                          Gen_Alloc (Alloc_Kind,
+                                     Chap3.Get_Object_Size (Var, Obj_Type),
+                                     Type_Info.Ortho_Ptr_Type (Kind)));
+      end if;
 
       if Type_Info.C (Kind).Builder_Need_Func then
          --  Build the type.
          Chap3.Gen_Call_Type_Builder (Targ, Obj_Type);
-         if not Is_Stable (Var) then
-            New_Assign_Stmt (M2Lp (Var), M2Addr (Targ));
-            Var := Targ;
-         end if;
+      end if;
+
+      if Has_Ref then
+         New_Assign_Stmt (M2Lp (Var), M2Addr (Targ));
+         Var := Targ;
       end if;
    end Allocate_Complex_Object;
 
@@ -367,12 +367,13 @@ package body Trans.Chap4 is
       else
          Sobj := Obj;
       end if;
-      Upper_Limit := Chap3.Get_Array_Length (Sobj, Obj_Type);
 
-      if Type_Info.Type_Mode /= Type_Mode_Array then
-         Upper_Var := Create_Temp_Init (Ghdl_Index_Type, Upper_Limit);
-      else
+      Upper_Limit := Chap3.Get_Array_Length (Sobj, Obj_Type);
+      if Type_Info.Type_Mode = Type_Mode_Static_Array then
          Upper_Var := O_Dnode_Null;
+      else
+         --  Hoist the computation of the limit before the loop.
+         Upper_Var := Create_Temp_Init (Ghdl_Index_Type, Upper_Limit);
       end if;
 
       Index := Create_Temp (Ghdl_Index_Type);
@@ -491,12 +492,11 @@ package body Trans.Chap4 is
 
       if Type_Info.Type_Mode = Type_Mode_Protected then
          --  Protected object will be created by its INIT function.
-         return;
-      end if;
-
-      if Is_Complex_Type (Type_Info)
-        and then Type_Info.Type_Mode not in Type_Mode_Unbounded
-      then
+         null;
+      elsif Is_Unbounded_Type (Type_Info) then
+         --  Allocated during initialization.
+         null;
+      elsif Is_Complex_Type (Type_Info) then
          --  FIXME: avoid allocation if the value is a string and
          --  the object is a constant
          Name_Node := Get_Var (Obj_Info.Object_Var, Type_Info, Mode_Value);
@@ -1297,7 +1297,7 @@ package body Trans.Chap4 is
       Res : Delayed_Signal_Data;
    begin
       Res.Param := Data.Param;
-      if Get_Type_Info (Targ).Type_Mode = Type_Mode_Record then
+      if Get_Type_Info (Targ).Type_Mode in Type_Mode_Bounded_Records then
          Res.Targ_Val := Stabilize (Data.Targ_Val);
          Res.Pfx := Stabilize (Data.Pfx);
       else
@@ -1470,10 +1470,20 @@ package body Trans.Chap4 is
       Close_Temp;
    end Final_File_Declaration;
 
-   procedure Translate_Type_Declaration (Decl : Iir) is
+   procedure Translate_Type_Declaration (Decl : Iir)
+   is
+      Def : constant Iir := Get_Type_Definition (Decl);
+      Mark  : Id_Mark_Type;
    begin
-      Chap3.Translate_Named_Type_Definition (Get_Type_Definition (Decl),
-                                             Get_Identifier (Decl));
+      Push_Identifier_Prefix (Mark, Get_Identifier (Decl));
+      case Get_Kind (Def) is
+         when Iir_Kinds_Subtype_Definition =>
+            Chap3.Translate_Subtype_Indication (Def, True);
+            raise Internal_Error;
+         when others =>
+            Chap3.Translate_Type_Definition (Def);
+      end case;
+      Pop_Identifier_Prefix (Mark);
    end Translate_Type_Declaration;
 
    procedure Translate_Anonymous_Type_Declaration (Decl : Iir)
@@ -1490,9 +1500,21 @@ package body Trans.Chap4 is
 
    procedure Translate_Subtype_Declaration (Decl : Iir_Subtype_Declaration)
    is
+      Def : constant Iir := Get_Type (Decl);
+      Mark  : Id_Mark_Type;
+      Parent_Type : Iir;
    begin
-      Chap3.Translate_Named_Type_Definition (Get_Type (Decl),
-                                             Get_Identifier (Decl));
+      Push_Identifier_Prefix (Mark, Get_Identifier (Decl));
+      Parent_Type := Get_Subtype_Type_Mark (Def);
+      if Parent_Type /= Null_Iir then
+         --  For normal user subtype declaration.
+         Parent_Type := Get_Type (Get_Named_Entity (Parent_Type));
+      else
+         --  For implicit subtype declaration of a type declaration.
+         Parent_Type := Get_Base_Type (Def);
+      end if;
+      Chap3.Translate_Subtype_Definition (Def, Parent_Type, True);
+      Pop_Identifier_Prefix (Mark);
    end Translate_Subtype_Declaration;
 
    procedure Translate_Bool_Type_Declaration (Decl : Iir_Type_Declaration)
@@ -1513,7 +1535,7 @@ package body Trans.Chap4 is
       Atype     : O_Tnode;
       Id        : Var_Ident_Type;
    begin
-      Chap3.Translate_Named_Type_Definition (Decl_Type, Get_Identifier (Decl));
+      Chap3.Translate_Object_Subtype (Decl, True);
 
       Info := Add_Info (Decl, Kind_Alias);
       if Is_Signal_Name (Decl) then
@@ -1530,7 +1552,8 @@ package body Trans.Chap4 is
                --  At elaboration: copy base from name, copy bounds from type,
                --   check for matching bounds.
                Atype := Get_Ortho_Type (Decl_Type, Mode);
-            when Type_Mode_Array
+            when Type_Mode_Bounded_Arrays
+              | Type_Mode_Bounded_Records
               | Type_Mode_Acc
               | Type_Mode_Bounds_Acc =>
                --  Create an object pointer.
@@ -1543,10 +1566,6 @@ package body Trans.Chap4 is
                   when Mode_Value =>
                      Atype := Tinfo.Ortho_Ptr_Type (Mode_Value);
                end case;
-            when Type_Mode_Record =>
-               --  Create an object pointer.
-               --  At elaboration: copy base from name.
-               Atype := Tinfo.Ortho_Ptr_Type (Mode);
             when others =>
                raise Internal_Error;
          end case;
@@ -1594,7 +1613,7 @@ package body Trans.Chap4 is
                   Stabilize (N);
                   Alias_Node := Stabilize (Get_Var (A, Tinfo, Mode));
                   Copy_Fat_Pointer (Alias_Node, N);
-               when Type_Mode_Array =>
+               when Type_Mode_Bounded_Arrays =>
                   Stabilize (N);
                   New_Assign_Stmt (Get_Var (A),
                                    M2E (Chap3.Get_Composite_Base (N)));
@@ -1610,7 +1629,7 @@ package body Trans.Chap4 is
                      when Mode_Signal =>
                         New_Assign_Stmt (Get_Var (A), M2E (N));
                   end case;
-               when Type_Mode_Record =>
+               when Type_Mode_Bounded_Records =>
                   Stabilize (N);
                   New_Assign_Stmt (Get_Var (A), M2Addr (N));
                when others =>
@@ -1698,6 +1717,7 @@ package body Trans.Chap4 is
          when Iir_Kind_Component_Declaration =>
             Chap4.Translate_Component_Declaration (Decl);
          when Iir_Kind_Type_Declaration =>
+            --  A type declaration can be in fact a subtype declaration.
             Chap4.Translate_Type_Declaration (Decl);
          when Iir_Kind_Anonymous_Type_Declaration =>
             Chap4.Translate_Anonymous_Type_Declaration (Decl);
@@ -2610,6 +2630,7 @@ package body Trans.Chap4 is
       Inter      : Iir;
       Mode       : Conv_Mode;
       Conv_Info  : in out Assoc_Conv_Info;
+      Num        : Iir_Int32;
       Base_Block : Iir;
       Entity     : Iir)
    is
@@ -2658,11 +2679,12 @@ package body Trans.Chap4 is
       end case;
       --  FIXME: individual assoc -> overload.
       Push_Identifier_Prefix
-        (Mark3, Get_Identifier (Get_Association_Interface (Assoc, Inter)));
+        (Mark3, Get_Identifier (Get_Association_Interface (Assoc, Inter)),
+         Num);
 
       --  Handle anonymous subtypes.
-      Chap3.Translate_Anonymous_Type_Definition (Out_Type);
-      Chap3.Translate_Anonymous_Type_Definition (In_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Out_Type, False);
+      Chap3.Translate_Anonymous_Subtype_Definition (In_Type, False);
       Out_Info := Get_Info (Out_Type);
       In_Info := Get_Info (In_Type);
 
@@ -2922,8 +2944,10 @@ package body Trans.Chap4 is
       Assoc : Iir;
       Inter : Iir;
       Info  : Assoc_Info_Acc;
+      Num : Iir_Int32;
    begin
       Assoc := Get_Port_Map_Aspect_Chain (Stmt);
+      Num := 0;
       if Is_Null (Entity) then
          Inter := Get_Port_Chain (Stmt);
       else
@@ -2937,7 +2961,8 @@ package body Trans.Chap4 is
                Info := Add_Info (Assoc, Kind_Assoc);
                Translate_Association_Subprogram
                  (Stmt, Block, Assoc, Inter, Conv_Mode_In, Info.Assoc_In,
-                  Base_Block, Entity);
+                  Num, Base_Block, Entity);
+               Num := Num + 1;
             end if;
             if Get_Formal_Conversion (Assoc) /= Null_Iir then
                if Info = null then
@@ -2945,7 +2970,8 @@ package body Trans.Chap4 is
                end if;
                Translate_Association_Subprogram
                  (Stmt, Block, Assoc, Inter, Conv_Mode_Out, Info.Assoc_Out,
-                  Base_Block, Entity);
+                  Num, Base_Block, Entity);
+               Num := Num + 1;
             end if;
          end if;
          Next_Association_Interface (Assoc, Inter);

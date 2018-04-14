@@ -240,7 +240,7 @@ package body Trans.Chap7 is
       List      : O_Array_Aggr_List;
       Res       : O_Cnode;
    begin
-      Chap3.Translate_Anonymous_Type_Definition (Aggr_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Aggr_Type, False);
       Start_Array_Aggr (List, Get_Ortho_Type (Aggr_Type, Mode_Value));
 
       Translate_Static_Array_Aggregate_1 (List, Aggr, Aggr_Type, 1);
@@ -257,7 +257,7 @@ package body Trans.Chap7 is
       List      : O_Array_Aggr_List;
       Res       : O_Cnode;
    begin
-      Chap3.Translate_Anonymous_Type_Definition (Aggr_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Aggr_Type, False);
       Start_Array_Aggr (List, Get_Ortho_Type (Aggr_Type, Mode_Value));
 
       for I in Flist_First .. Flist_Last (El_List) loop
@@ -280,7 +280,7 @@ package body Trans.Chap7 is
       List         : O_Array_Aggr_List;
       Res          : O_Cnode;
    begin
-      Chap3.Translate_Anonymous_Type_Definition (Lit_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Lit_Type, False);
       Arr_Type := Get_Ortho_Type (Lit_Type, Mode_Value);
 
       Start_Array_Aggr (List, Arr_Type);
@@ -364,11 +364,11 @@ package body Trans.Chap7 is
          New_Record_Aggr_El
            (Index_Aggr,
             New_Signed_Literal
-              (Index_Type_Info.Ortho_Type (Mode_Value), 0));
+              (Index_Type_Info.Ortho_Type (Mode_Value), 1));
          New_Record_Aggr_El
            (Index_Aggr,
             New_Signed_Literal (Index_Type_Info.Ortho_Type (Mode_Value),
-              Integer_64 (Len - 1)));
+              Integer_64 (Len)));
          New_Record_Aggr_El
            (Index_Aggr, Ghdl_Dir_To_Node);
          New_Record_Aggr_El
@@ -396,7 +396,7 @@ package body Trans.Chap7 is
          Val := Create_Global_Const
            (Create_Uniq_Identifier, Type_Info.Ortho_Type (Mode_Value),
             O_Storage_Private, Res);
-      elsif Type_Info.Type_Mode = Type_Mode_Array then
+      elsif Type_Info.Type_Mode in Type_Mode_Bounded_Arrays then
          --  Type of string literal isn't statically known; check the
          --  length.
          Chap6.Check_Bound_Error
@@ -419,22 +419,19 @@ package body Trans.Chap7 is
    function Translate_Static_String (Str_Type : Iir; Str_Ident : Name_Id)
                                     return O_Cnode
    is
-      use Name_Table;
-
+      Img : constant String := Name_Table.Image (Str_Ident);
       Literal_List : constant Iir_Flist :=
         Get_Enumeration_Literal_List (Character_Type_Definition);
       Lit          : Iir;
       List         : O_Array_Aggr_List;
       Res          : O_Cnode;
    begin
-      Chap3.Translate_Anonymous_Type_Definition (Str_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Str_Type, False);
 
       Start_Array_Aggr (List, Get_Ortho_Type (Str_Type, Mode_Value));
 
-      Image (Str_Ident);
-      for I in 1 .. Nam_Length loop
-         Lit := Get_Nth_Element (Literal_List,
-                                 Character'Pos (Nam_Buffer (I)));
+      for I in Img'Range loop
+         Lit := Get_Nth_Element (Literal_List, Character'Pos (Img (I)));
          New_Array_Aggr_El (List, Get_Ortho_Expr (Lit));
       end loop;
 
@@ -904,17 +901,14 @@ package body Trans.Chap7 is
                when Type_Mode_Unbounded_Array =>
                   --  unconstrained to unconstrained.
                   return Expr;
-               when Type_Mode_Array =>
+               when Type_Mode_Bounded_Arrays =>
                   --  constrained to unconstrained.
                   return Convert_Constrained_To_Unconstrained (Expr, Res_Type);
                when others =>
                   raise Internal_Error;
             end case;
-         when Type_Mode_Array =>
-            --  X to constrained.
-            if Einfo.Type_Locally_Constrained
-              and then Ainfo.Type_Locally_Constrained
-            then
+         when Type_Mode_Static_Array =>
+            if Einfo.Type_Mode = Type_Mode_Static_Array then
                --  FIXME: optimize static vs non-static
                --  constrained to constrained.
                if not Chap3.Locally_Array_Match (Expr_Type, Res_Type) then
@@ -926,9 +920,10 @@ package body Trans.Chap7 is
                return Expr;
             else
                --  Unbounded/bounded array to bounded array.
-               return Convert_To_Constrained
-                 (Expr, Expr_Type, Res_Type, Loc);
+               return Convert_To_Constrained (Expr, Expr_Type, Res_Type, Loc);
             end if;
+         when Type_Mode_Complex_Array =>
+            return Convert_To_Constrained (Expr, Expr_Type, Res_Type, Loc);
          when others =>
             raise Internal_Error;
       end case;
@@ -953,22 +948,22 @@ package body Trans.Chap7 is
                when Type_Mode_Unbounded_Record =>
                   --  unbounded to unbounded
                   return Expr;
-               when Type_Mode_Record =>
+               when Type_Mode_Bounded_Records =>
                   --  bounded to unconstrained.
                   return Convert_Constrained_To_Unconstrained (Expr, Res_Type);
                when others =>
                   raise Internal_Error;
             end case;
-         when Type_Mode_Record =>
+         when Type_Mode_Bounded_Records =>
             --  X to bounded
             case Einfo.Type_Mode is
                when Type_Mode_Unbounded_Record =>
                   --  unbounded to bounded.
                   return Convert_To_Constrained
                     (Expr, Expr_Type, Res_Type, Loc);
-               when Type_Mode_Record =>
+               when Type_Mode_Bounded_Records =>
                   --  bounded to bounded.
-                  --  TODO: likewise ?
+                  --  TODO: likewise ? check bounds ?
                   return Expr;
                when others =>
                   raise Internal_Error;
@@ -2756,11 +2751,11 @@ package body Trans.Chap7 is
                Chap3.Translate_Object_Copy
                  (T, New_Obj_Value (E), Target_Type);
             end;
-         when Type_Mode_Array =>
+         when Type_Mode_Bounded_Arrays =>
             --  Source is of type TARGET_TYPE, so no length check is
             --  necessary.
             Chap3.Translate_Object_Copy (Target, Val, Target_Type);
-         when Type_Mode_Record =>
+         when Type_Mode_Bounded_Records =>
             Chap3.Translate_Object_Copy (Target, Val, Target_Type);
          when Type_Mode_Unbounded_Record =>
             --  TODO
@@ -2842,11 +2837,11 @@ package body Trans.Chap7 is
 
       Info := Get_Info (Target_Type);
       case Info.Type_Mode is
-         when Type_Mode_Fat_Array =>
+         when Type_Mode_Unbounded_Array =>
             Arr_Var := Stabilize (Target);
             Base_Ptr := Stabilize (Chap3.Get_Composite_Base (Arr_Var));
             Len_Val := Chap3.Get_Array_Length (Arr_Var, Target_Type);
-         when Type_Mode_Array =>
+         when Type_Mode_Bounded_Arrays =>
             Base_Ptr := Stabilize (Chap3.Get_Composite_Base (Target));
             Len_Val := Chap3.Get_Array_Type_Length (Target_Type);
          when others =>
@@ -3269,7 +3264,8 @@ package body Trans.Chap7 is
                A_Range : Mnode;
             begin
                --  Evaluate the range.
-               Chap3.Translate_Anonymous_Type_Definition (Subaggr_Type);
+               Chap3.Translate_Anonymous_Subtype_Definition
+                 (Subaggr_Type, False);
 
                A_Range :=
                  Dv2M (Create_Temp (Rinfo.B.Range_Type), Rinfo, Mode_Value,
@@ -3376,7 +3372,7 @@ package body Trans.Chap7 is
 
       --  FIXME: creating aggregate subtype is expensive and rarely used.
       --  (one of the current use - only ? - is check_array_match).
-      Chap3.Translate_Anonymous_Type_Definition (Aggr_Type);
+      Chap3.Translate_Anonymous_Subtype_Definition (Aggr_Type, False);
    end Translate_Array_Aggregate;
 
    procedure Translate_Aggregate
@@ -3576,7 +3572,7 @@ package body Trans.Chap7 is
    begin
       E := Stabilize (E2M (Expr, Expr_Info, Mode_Value));
       case Res_Info.Type_Mode is
-         when Type_Mode_Array =>
+         when Type_Mode_Bounded_Arrays =>
             Chap3.Check_Array_Match
               (Res_Type, T2M (Res_Type, Mode_Value),
                Expr_Type, E,
@@ -3584,7 +3580,7 @@ package body Trans.Chap7 is
             return New_Convert_Ov
               (M2Addr (Chap3.Get_Composite_Base (E)),
                Res_Info.Ortho_Ptr_Type (Mode_Value));
-         when Type_Mode_Fat_Array =>
+         when Type_Mode_Unbounded_Array =>
             declare
                Res : Mnode;
             begin
@@ -4643,8 +4639,7 @@ package body Trans.Chap7 is
             return New_Compare_Op (ON_Eq, M2E (L), M2E (R),
                                    Ghdl_Bool_Type);
 
-         when Type_Mode_Array
-           | Type_Mode_Unbounded_Array =>
+         when Type_Mode_Arrays =>
             declare
                Base_Type : constant Iir_Array_Type_Definition
                  := Get_Base_Type (Etype);
@@ -4660,8 +4655,7 @@ package body Trans.Chap7 is
                return Translate_Predefined_Lib_Operator (Lc, Rc, Func);
             end;
 
-         when Type_Mode_Record
-           | Type_Mode_Unbounded_Record =>
+         when Type_Mode_Records =>
             declare
                Func : Iir;
             begin
@@ -4716,7 +4710,8 @@ package body Trans.Chap7 is
       Var_I          : O_Dnode;
       Var_Len        : O_Dnode;
       Label          : O_Snode;
-      Le, Re         : Mnode;
+      Base_Le, Base_Re : Mnode;
+      Var_L, Var_R   : Mnode;
    begin
       if Global_Storage = O_Storage_External then
          return;
@@ -4749,29 +4744,34 @@ package body Trans.Chap7 is
       New_Assign_Stmt (New_Obj (Var_Len),
                        Chap3.Get_Array_Length (L, Arr_Type));
       Close_Temp;
+      Open_Temp;
+      Var_L := Chap3.Create_Maybe_Fat_Array_Element (L, Arr_Type);
+      Var_R := Chap3.Create_Maybe_Fat_Array_Element (R, Arr_Type);
       Init_Var (Var_I);
       Start_Loop_Stmt (Label);
       --  If the end of the array is reached, return TRUE.
       Start_If_Stmt (If_Blk,
                      New_Compare_Op (ON_Ge,
-                       New_Obj_Value (Var_I),
-                       New_Obj_Value (Var_Len),
-                       Ghdl_Bool_Type));
+                                     New_Obj_Value (Var_I),
+                                     New_Obj_Value (Var_Len),
+                                     Ghdl_Bool_Type));
       New_Return_Stmt (New_Lit (Std_Boolean_True_Node));
       Finish_If_Stmt (If_Blk);
       Open_Temp;
-      Le := Chap3.Index_Base (Chap3.Get_Composite_Base (L), Arr_Type,
-                              New_Obj_Value (Var_I));
-      Re := Chap3.Index_Base (Chap3.Get_Composite_Base (R), Arr_Type,
-                              New_Obj_Value (Var_I));
+      Base_Le := Chap3.Index_Array (L, Arr_Type, New_Obj_Value (Var_I));
+      Base_Le := Chap3.Assign_Maybe_Fat_Array_Element (Var_L, Base_Le);
+      Base_Re := Chap3.Index_Array (R, Arr_Type, New_Obj_Value (Var_I));
+      Base_Re := Chap3.Assign_Maybe_Fat_Array_Element (Var_R, Base_Re);
       Start_If_Stmt
         (If_Blk,
-         New_Monadic_Op (ON_Not, Translate_Equality (Le, Re, El_Type)));
+         New_Monadic_Op (ON_Not,
+                         Translate_Equality (Base_Le, Base_Re, El_Type)));
       New_Return_Stmt (New_Lit (Std_Boolean_False_Node));
       Finish_If_Stmt (If_Blk);
       Close_Temp;
       Inc_Var (Var_I);
       Finish_Loop_Stmt (Label);
+      Close_Temp;
       Finish_Operator_Instance_Use (F_Info);
       Finish_Subprogram_Body;
    end Translate_Predefined_Array_Equality_Body;
@@ -5516,7 +5516,7 @@ package body Trans.Chap7 is
                     Ghdl_Index_Type)));
                --    call a predefined procedure
                New_Procedure_Call (Assocs);
-            when Type_Mode_Record =>
+            when Type_Mode_Bounded_Records =>
                declare
                   El_List : constant Iir_Flist :=
                     Get_Elements_Declaration_List (Get_Base_Type (Val_Type));
@@ -5533,7 +5533,7 @@ package body Trans.Chap7 is
                   end loop;
                   Close_Temp;
                end;
-            when Type_Mode_Array =>
+            when Type_Mode_Bounded_Arrays =>
                declare
                   Var_Max : O_Dnode;
                begin

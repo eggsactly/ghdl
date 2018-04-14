@@ -70,7 +70,7 @@ echo "travis_fold:end:fetch"
 # Compute package name
 
 PKG_SHORTCOMMIT="$(printf $TRAVIS_COMMIT | cut -c1-10)"
-PKG_VER=`grep Ghdl_Ver src/version.in | sed -e 's/.*"\(.*\)";/\1/'`
+PKG_VER=`grep "ghdl_version=" configure | sed -e 's/.*"\(.*\)";/\1/'`
 if [ -z "$TRAVIS_TAG" ]; then
     # No tag: use date + commit id
     PKG_TAG="$(date -u +%Y%m%d)-$PKG_SHORTCOMMIT";
@@ -116,6 +116,8 @@ else
     # available in docker (otherwise it will describe as -dirty
     # because this modifies the source file version.in).
     make -f Makefile.in srcdir=. version.tmp
+    cat version.tmp
+#    sed -e "s/@ghdl_version@/@VER@/" < version.tmp > src/version.in;
     cp version.tmp src/version.in
 
     # Run build in docker

@@ -164,11 +164,13 @@ package body Trans.Chap9 is
       Ports : Iir;
 
       Mark, Mark2 : Id_Mark_Type;
-      Assoc, Inter, Conv, In_Type : Iir;
+      Assoc, Inter : Iir;
+      Num : Iir_Int32;
       Has_Conv_Record      : Boolean := False;
    begin
       Info := Add_Info (Inst, Kind_Block);
       Push_Identifier_Prefix (Mark, Get_Label (Inst));
+      Num := 0;
 
       if Is_Component_Instantiation (Inst) then
          --  Via a component declaration.
@@ -191,7 +193,7 @@ package body Trans.Chap9 is
       end if;
 
       --  When conversions are used, the subtype of the actual (or of the
-      --  formal for out conversions) may not be yet translated.  This
+      --  formal for formal conversions) may not be yet translated.  This
       --  can happen if the name is a slice.
       --  We need to translate it and create variables in the instance
       --  because it will be referenced by the conversion subprogram.
@@ -200,25 +202,41 @@ package body Trans.Chap9 is
       while Assoc /= Null_Iir loop
          if Get_Kind (Assoc) = Iir_Kind_Association_Element_By_Expression
          then
-            Conv := Get_Actual_Conversion (Assoc);
-            In_Type := Get_Type (Get_Actual (Assoc));
-            if Conv /= Null_Iir
-              and then Is_Anonymous_Type_Definition (In_Type)
-            then
-               --  Lazy creation of the record.
-               if not Has_Conv_Record then
-                  Has_Conv_Record := True;
-                  Push_Instance_Factory (Info.Block_Scope'Access);
-               end if;
+            declare
+               Act_Conv : constant Iir := Get_Actual_Conversion (Assoc);
+               Act_Type : constant Iir := Get_Type (Get_Actual (Assoc));
+               Form_Conv : constant Iir := Get_Formal_Conversion (Assoc);
+               Formal : constant Iir := Get_Formal (Assoc);
+               Need_Actual : constant Boolean := Act_Conv /= Null_Iir
+                 and then Is_Anonymous_Type_Definition (Act_Type);
+               Need_Formal : constant Boolean := Form_Conv /= Null_Iir
+                 and then Is_Anonymous_Type_Definition (Get_Type (Formal));
+            begin
+               if Need_Actual or Need_Formal then
+                  --  Lazy creation of the record.
+                  if not Has_Conv_Record then
+                     Has_Conv_Record := True;
+                     Push_Instance_Factory (Info.Block_Scope'Access);
+                  end if;
 
-               --  FIXME: handle with overload multiple case on the same
-               --  formal.
-               Push_Identifier_Prefix
-                 (Mark2,
-                  Get_Identifier (Get_Association_Interface (Assoc, Inter)));
-               Chap3.Translate_Type_Definition (In_Type, True);
-               Pop_Identifier_Prefix (Mark2);
-            end if;
+                  --  FIXME: handle with overload multiple case on the same
+                  --  formal.
+                  Push_Identifier_Prefix
+                    (Mark2,
+                     Get_Identifier
+                       (Get_Association_Interface (Assoc, Inter)), Num);
+                  Num := Num + 1;
+                  if Need_Actual then
+                     Chap3.Translate_Anonymous_Subtype_Definition
+                       (Act_Type, True);
+                  end if;
+                  if Need_Formal then
+                     Chap3.Translate_Anonymous_Subtype_Definition
+                       (Get_Type (Formal), True);
+                  end if;
+                  Pop_Identifier_Prefix (Mark2);
+               end if;
+            end;
          end if;
          Next_Association_Interface (Assoc, Inter);
       end loop;

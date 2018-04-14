@@ -88,15 +88,12 @@ package body Trans.Helpers2 is
    end Create_String;
 
    function Create_String (Str : Name_Id; Id : O_Ident; Storage : O_Storage)
-                              return O_Dnode
+                          return O_Dnode
    is
       use Name_Table;
    begin
-      if Name_Table.Is_Character (Str) then
-         raise Internal_Error;
-      end if;
-      Image (Str);
-      return Create_String (Nam_Buffer (1 .. Nam_Length), Id, Storage);
+      pragma Assert (not Name_Table.Is_Character (Str));
+      return Create_String (Image (Str), Id, Storage);
    end Create_String;
 
    function Create_String_Len (Str : String; Id : O_Ident) return O_Cnode
@@ -237,11 +234,9 @@ package body Trans.Helpers2 is
       Type_Info := Get_Info (Targ_Type);
       Res := E2M (Val, Type_Info, Mode_Value);
       case Type_Info.Type_Mode is
-         when Type_Mode_Array
-            | Type_Mode_Unbounded_Array =>
+         when Type_Mode_Arrays =>
             Res := Chap3.Get_Composite_Base (Res);
-         when Type_Mode_Record
-           | Type_Mode_Unbounded_Record =>
+         when Type_Mode_Records =>
             Res := Stabilize (Res);
          when others =>
             --  Not a composite type!

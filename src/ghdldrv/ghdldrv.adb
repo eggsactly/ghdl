@@ -997,8 +997,8 @@ package body Ghdldrv is
          if Add_Std then
             Std_File := new
               String'(Get_Machine_Path_Prefix & Directory_Separator
-                      & Get_Version_Path & Directory_Separator
                       & "std" & Directory_Separator
+                      & Get_Version_Path & Directory_Separator
                       & "std_standard" & Link_Obj_Suffix.all);
             P := P + 1;
             Args (P) := Std_File;
@@ -1497,18 +1497,16 @@ package body Ghdldrv is
             New_Line;
 --             Put (" file: ");
 --             File := Get_Design_File (Unit);
---             Image (Get_Design_File_Filename (File));
---             Put_Line (Nam_Buffer (1 .. Nam_Length));
+--             Put_Line (Image (Get_Design_File_Filename (File)));
          end loop;
       end if;
       if Cmd.Flag_Depend_Unit then
          Put_Line ("File analysis order:");
          Files_It := List_Iterate (Files_List);
          while Is_Valid (Files_It) loop
-            File := Get_Element (Files_It);
-            Image (Get_Design_File_Filename (File));
             Put ("  ");
-            Put (Nam_Buffer (1 .. Nam_Length));
+            File := Get_Element (Files_It);
+            Put (Image (Get_Design_File_Filename (File)));
             if Flag_Verbose then
                Put_Line (":");
                declare
@@ -1519,10 +1517,9 @@ package body Ghdldrv is
                begin
                   Dep_It := List_Iterate_Safe (Dep_List);
                   while Is_Valid (Dep_It) loop
-                     Dep_File := Get_Element (Dep_It);
-                     Image (Get_Design_File_Filename (Dep_File));
                      Put ("    ");
-                     Put_Line (Nam_Buffer (1 .. Nam_Length));
+                     Dep_File := Get_Element (Dep_It);
+                     Put_Line (Image (Get_Design_File_Filename (Dep_File)));
                      Next (Dep_It);
                   end loop;
                end;

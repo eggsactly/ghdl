@@ -37,11 +37,7 @@ package Trans.Chap3 is
    --  4. Create bounds constructor
    --  5. Create type descriptor declaration
    --  6. Create type descriptor constructor
-   procedure Translate_Type_Definition
-     (Def : Iir; With_Vars : Boolean := True);
-
-   procedure Translate_Named_Type_Definition (Def : Iir; Id : Name_Id);
-   procedure Translate_Anonymous_Type_Definition (Def : Iir);
+   procedure Translate_Type_Definition (Def : Iir);
 
    --  Translate subprograms for types.
    procedure Translate_Type_Subprograms
@@ -60,6 +56,21 @@ package Trans.Chap3 is
    procedure Translate_Protected_Type_Body (Bod : Iir);
    procedure Translate_Protected_Type_Body_Subprograms_Spec (Bod : Iir);
    procedure Translate_Protected_Type_Body_Subprograms_Body (Bod : Iir);
+
+   --  DEF derives (using the Ada meaning) of PARENT_TYPE, ie DEF has new
+   --  constraints on PARENT_TYPE.
+   procedure Translate_Subtype_Definition
+     (Def : Iir; Parent_Type : Iir; With_Vars : Boolean := True);
+
+   --  Translate a proper subtype indication.
+   procedure Translate_Subtype_Indication (Def : Iir; With_Vars : Boolean);
+
+   procedure Translate_Named_Subtype_Definition (Def : Iir; Id : Name_Id);
+
+   --  When there is no name for the subtype (eg: the subtype of a string or
+   --  of an aggregate).  There is also no type mark.
+   procedure Translate_Anonymous_Subtype_Definition
+     (Def : Iir; With_Vars : Boolean);
 
    --  Translate_type_definition_Elab do 4 and 6.
    --  It generates code to do type elaboration.
@@ -120,15 +131,32 @@ package Trans.Chap3 is
    --    number of dimensions; these fields are a structure describing the
    --    range of the dimension.
 
+   --  If the element subtype of ARR_TYPE is unbounded, create a fat pointer,
+   --  set the bounds of it (from ARR), and return it.
+   --  Otherwise, return a null mnode.
+   --  Used to build a var for a subelement of ARR.
+   function Create_Maybe_Fat_Array_Element (Arr : Mnode; Arr_Type : Iir)
+                                           return Mnode;
+
+   --  If the element subtype of the array is unbounded, set the base of VAR
+   --  from EL, and return it.
+   --  Otherwise directly return EL (VAR must be null).
+   function Assign_Maybe_Fat_Array_Element (Var : Mnode; El : Mnode)
+                                           return Mnode;
+
    --  Index array BASE of type ATYPE with INDEX.
    --  INDEX must be of type ghdl_index_type, thus no bounds checks are
    --  performed.
    function Index_Base (Base : Mnode; Atype : Iir; Index : O_Enode)
-                           return Mnode;
+                       return Mnode;
+
+   --  Index array ARR of type ATYPE with INDEX.
+   function Index_Array (Arr : Mnode; Atype : Iir; Index : O_Enode)
+                        return Mnode;
 
    --  Same for for slicing.
    function Slice_Base (Base : Mnode; Atype : Iir; Index : O_Enode)
-                           return Mnode;
+                       return Mnode;
 
    --  Get the length of the array (the number of elements).
    function Get_Array_Length (Arr : Mnode; Atype : Iir) return O_Enode;
@@ -178,6 +206,11 @@ package Trans.Chap3 is
    --  From an unbounded record bounds B, get the bounds for (unbounded)
    --  element EL.
    function Bounds_To_Element_Bounds (B : Mnode; El : Iir) return Mnode;
+
+   --  From an unbounded array bounds B, get the bounds for the (unbounded)
+   --  element.
+   function Array_Bounds_To_Element_Bounds (B : Mnode; Atype : Iir)
+                                           return Mnode;
 
    --  Deallocate OBJ.
    procedure Gen_Deallocate (Obj : O_Enode);

@@ -52,12 +52,14 @@ package Elocations is
    --  Tuples --
    -------------
 
-   -- Iir_Kind_Association_Element_By_Expression (None)
-   -- Iir_Kind_Association_Element_Open (None)
-   -- Iir_Kind_Association_Element_By_Individual (None)
-   -- Iir_Kind_Association_Element_Package (None)
-   -- Iir_Kind_Association_Element_Type (None)
-   -- Iir_Kind_Association_Element_Subprogram (None)
+   -- Iir_Kind_Association_Element_By_Expression (L1)
+   -- Iir_Kind_Association_Element_Open (L1)
+   -- Iir_Kind_Association_Element_By_Individual (L1)
+   -- Iir_Kind_Association_Element_Package (L1)
+   -- Iir_Kind_Association_Element_Type (L1)
+   -- Iir_Kind_Association_Element_Subprogram (L1)
+   --
+   --   Get/Set_Arrow_Location (Field1)
 
    -- Iir_Kind_Waveform_Element (None)
 
@@ -86,11 +88,11 @@ package Elocations is
 
    -- Iir_Kind_Disconnection_Specification (None)
 
-   -- Iir_Kind_Block_Header (L5)
+   -- Iir_Kind_Block_Header (L6)
    --
-   --   Get/Set_Generic_Location (Field4)
+   --   Get/Set_Generic_Location (Field5)
    --
-   --   Get/Set_Port_Location (Field5)
+   --   Get/Set_Port_Location (Field6)
    --
    --   Get/Set_Generic_Map_Location (Field3)
    --
@@ -114,24 +116,28 @@ package Elocations is
    --  Declarations --
    -------------------
 
-   -- Iir_Kind_Entity_Declaration (L5)
+   -- Iir_Kind_Entity_Declaration (L6)
    --
    --   Get/Set_Start_Location (Field1)
    --
    --   Get/Set_End_Location (Field2)
    --
-   --   Get/Set_Generic_Location (Field4)
+   --   Get/Set_Generic_Location (Field5)
    --
-   --   Get/Set_Port_Location (Field5)
+   --   Get/Set_Port_Location (Field6)
    --
    --   Get/Set_Begin_Location (Field3)
+   --
+   --   Get/Set_Is_Location (Field4)
 
-   -- Iir_Kind_Architecture_Body (L3)
+   -- Iir_Kind_Architecture_Body (L4)
    --   Get/Set_Start_Location (Field1)
    --
    --   Get/Set_End_Location (Field2)
    --
    --   Get/Set_Begin_Location (Field3)
+   --
+   --   Get/Set_Is_Location (Field4)
 
    -- Iir_Kind_Configuration_Declaration (L2)
    --   Get/Set_Start_Location (Field1)
@@ -140,7 +146,7 @@ package Elocations is
 
    -- Iir_Kind_Package_Header (L5)
    --
-   --   Get/Set_Generic_Location (Field4)
+   --   Get/Set_Generic_Location (Field5)
    --
    --   Get/Set_Generic_Map_Location (Field3)
 
@@ -173,15 +179,15 @@ package Elocations is
 
    -- Iir_Kind_Library_Declaration (None)
 
-   -- Iir_Kind_Component_Declaration (L5)
+   -- Iir_Kind_Component_Declaration (L6)
    --
    --   Get/Set_Start_Location (Field1)
    --
    --   Get/Set_End_Location (Field2)
    --
-   --   Get/Set_Generic_Location (Field4)
+   --   Get/Set_Generic_Location (Field5)
    --
-   --   Get/Set_Port_Location (Field5)
+   --   Get/Set_Port_Location (Field6)
 
    -- Iir_Kind_Object_Alias_Declaration (L1)
    --
@@ -193,28 +199,32 @@ package Elocations is
    --
    --   Get/Set_Start_Location (Field1)
 
-   -- Iir_Kind_Type_Declaration (L2)
+   -- Iir_Kind_Type_Declaration (L4)
    --
    --   Get/Set_Start_Location (Field1)
    --
-   --   Get/Set_Is_Location (Field2)
+   --   Get/Set_Is_Location (Field4)
 
-   -- Iir_Kind_Subtype_Declaration (L2)
+   -- Iir_Kind_Subtype_Declaration (L4)
    --
    --   Get/Set_Start_Location (Field1)
    --
-   --   Get/Set_Is_Location (Field2)
+   --   Get/Set_Is_Location (Field4)
 
    -- Iir_Kind_Nature_Declaration (None)
 
    -- Iir_Kind_Subnature_Declaration (None)
 
-   -- Iir_Kind_Interface_Signal_Declaration (L1)
-   -- Iir_Kind_Interface_Constant_Declaration (L1)
-   -- Iir_Kind_Interface_Variable_Declaration (L1)
-   -- Iir_Kind_Interface_File_Declaration (L1)
+   -- Iir_Kind_Interface_Signal_Declaration (L3)
+   -- Iir_Kind_Interface_Constant_Declaration (L3)
+   -- Iir_Kind_Interface_Variable_Declaration (L3)
+   -- Iir_Kind_Interface_File_Declaration (L3)
    --
    --   Get/Set_Start_Location (Field1)
+   --
+   --   Get/Set_Colon_Location (Field2)
+   --
+   --   Get/Set_Assign_Location (Field3)
 
    -- Iir_Kind_Interface_Type_Declaration (L1)
    --
@@ -229,14 +239,16 @@ package Elocations is
    --
    --   Get/Set_Start_Location (Field1)
 
-   -- Iir_Kind_Function_Body (L3)
-   -- Iir_Kind_Procedure_Body (L3)
+   -- Iir_Kind_Function_Body (L4)
+   -- Iir_Kind_Procedure_Body (L4)
    --
    --   Get/Set_Start_Location (Field1)
    --
    --   Get/Set_End_Location (Field2)
    --
    --   Get/Set_Begin_Location (Field3)
+   --
+   --   Get/Set_Is_Location (Field4)
 
    -- Iir_Kind_Interface_Function_Declaration (None)
    -- Iir_Kind_Interface_Procedure_Declaration (None)
@@ -311,8 +323,6 @@ package Elocations is
 
    -- Iir_Kind_Record_Type_Definition (L2)
    --
-   --   Get/Set_Start_Location (Field1)
-   --
    --   Get/Set_End_Location (Field2)
 
    -- Iir_Kind_Access_Type_Definition (None)
@@ -377,14 +387,16 @@ package Elocations is
    --
    --   Get/Set_Start_Location (Field1)
 
-   -- Iir_Kind_Sensitized_Process_Statement (L3)
-   -- Iir_Kind_Process_Statement (L3)
+   -- Iir_Kind_Sensitized_Process_Statement (L4)
+   -- Iir_Kind_Process_Statement (L4)
    --
    --   Get/Set_Start_Location (Field1)
    --
    --   Get/Set_End_Location (Field2)
    --
    --   Get/Set_Begin_Location (Field3)
+   --
+   --   Get/Set_Is_Location (Field4)
 
    -- Iir_Kind_Concurrent_Assertion_Statement (None)
 
@@ -399,11 +411,13 @@ package Elocations is
    --
    --   Get/Set_Port_Map_Location (Field2)
 
-   -- Iir_Kind_Block_Statement (L3)
+   -- Iir_Kind_Block_Statement (L4)
    --
    --   Get/Set_End_Location (Field2)
    --
    --   Get/Set_Begin_Location (Field3)
+   --
+   --   Get/Set_Is_Location (Field4)
 
    -- Iir_Kind_Generate_Statement_Body (L3)
    --
@@ -617,6 +631,10 @@ package Elocations is
    --  Allocate memory to store elocations for node N.  Must be called once.
    procedure Create_Elocations (N : Iir);
 
+   --  Delete locations.  Memory is not yet reclaimed (but doesn't happen
+   --  frequently).
+   procedure Delete_Elocations (N : Iir);
+
    -- General methods.
 
    --  Field: Field1
@@ -631,7 +649,7 @@ package Elocations is
    function Get_End_Location (N : Iir) return Location_Type;
    procedure Set_End_Location (N : Iir; Loc : Location_Type);
 
-   --  Field: Field2
+   --  Field: Field4
    function Get_Is_Location (N : Iir) return Location_Type;
    procedure Set_Is_Location (N : Iir; Loc : Location_Type);
 
@@ -651,11 +669,11 @@ package Elocations is
    function Get_Generate_Location (N : Iir) return Location_Type;
    procedure Set_Generate_Location (N : Iir; Loc : Location_Type);
 
-   --  Field: Field4
+   --  Field: Field5
    function Get_Generic_Location (N : Iir) return Location_Type;
    procedure Set_Generic_Location (N : Iir; Loc : Location_Type);
 
-   --  Field: Field5
+   --  Field: Field6
    function Get_Port_Location (N : Iir) return Location_Type;
    procedure Set_Port_Location (N : Iir; Loc : Location_Type);
 
@@ -666,4 +684,16 @@ package Elocations is
    --  Field: Field2
    function Get_Port_Map_Location (N : Iir) return Location_Type;
    procedure Set_Port_Map_Location (N : Iir; Loc : Location_Type);
+
+   --  Field: Field1
+   function Get_Arrow_Location (N : Iir) return Location_Type;
+   procedure Set_Arrow_Location (N : Iir; Loc : Location_Type);
+
+   --  Field: Field2
+   function Get_Colon_Location (N : Iir) return Location_Type;
+   procedure Set_Colon_Location (N : Iir; Loc : Location_Type);
+
+   --  Field: Field3
+   function Get_Assign_Location (N : Iir) return Location_Type;
+   procedure Set_Assign_Location (N : Iir; Loc : Location_Type);
 end Elocations;

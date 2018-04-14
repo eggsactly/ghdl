@@ -186,3 +186,4 @@ function setUpCarousel()
   legend[0].className = "legend o-20";
 
 }
+

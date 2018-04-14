@@ -386,6 +386,7 @@ package body Std_Names is
       Def ("l",                     Name_L);
       Def ("r",                     Name_R);
       Def ("s",                     Name_S);
+      Def ("v",                     Name_V);
       Def ("external_name",         Name_External_Name);
       Def ("open_kind",             Name_Open_Kind);
       Def ("status",                Name_Status);
@@ -416,8 +417,6 @@ package body Std_Names is
       Def ("vital_level1",       Name_VITAL_Level1);
       Def ("numeric_std",        Name_Numeric_Std);
       Def ("numeric_bit",        Name_Numeric_Bit);
-      Def ("unsigned",           Name_Unsigned);
-      Def ("signed",             Name_Signed);
       Def ("unresolved_unsigned", Name_Unresolved_Unsigned);
       Def ("unresolved_signed",  Name_Unresolved_Signed);
       Def ("std_logic_arith",    Name_Std_Logic_Arith);
@@ -490,12 +489,22 @@ package body Std_Names is
       Def ("tri",          Name_Tri);
       Def ("tri0",         Name_Tri0);
       Def ("tri1",         Name_Tri1);
+      Def ("triand",       Name_Triand);
+      Def ("trior",        Name_Trior);
       Def ("trireg",       Name_Trireg);
       Def ("wand",         Name_Wand);
       Def ("weak0",        Name_Weak0);
       Def ("weak1",        Name_Weak1);
       Def ("wire",         Name_Wire);
       Def ("wor",          Name_Wor);
+
+      --  Verilog 2001
+      Def ("automatic",    Name_Automatic);
+      Def ("endgenerate",  Name_Endgenerate);
+      Def ("genvar",       Name_Genvar);
+      Def ("localparam",   Name_Localparam);
+      Def ("unsigned",     Name_Unsigned);
+      Def ("signed",       Name_Signed);
 
       Def ("define",       Name_Define);
       Def ("endif",        Name_Endif);

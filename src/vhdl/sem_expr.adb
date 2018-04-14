@@ -1781,8 +1781,7 @@ package body Sem_Expr is
             Decl := Get_Non_Alias_Declaration (Interpretation);
 
             --  It is compatible with operand types ?
-            pragma Assert (Kind_In (Decl, Iir_Kind_Function_Declaration,
-                                    Iir_Kind_Interface_Function_Declaration));
+            pragma Assert (Is_Function_Declaration (Decl));
 
             --  LRM08 12.3 Visibility
             --  [...] or all visible declarations denote the same named entity.
@@ -1849,7 +1848,14 @@ package body Sem_Expr is
          --  The list of possible implementations was computed.
          case Get_Nbr_Elements (Overload_List) is
             when 0 =>
-               Error_Msg_Sem (+Expr, "no function declarations for %n", +Expr);
+               if Get_Kind (Expr) = Iir_Kind_Implicit_Condition_Operator then
+                  --  TODO: display expression type.
+                  Error_Msg_Sem (+Expr, "cannot convert expression to boolean "
+                                   & "(no ""??"" found)");
+               else
+                  Error_Msg_Sem (+Expr,
+                                 "no function declarations for %n", +Expr);
+               end if;
                Destroy_Iir_List (Overload_List);
                return Null_Iir;
 
@@ -3579,6 +3585,8 @@ package body Sem_Expr is
                return Null_Iir;
             end if;
             return Expr;
+         when Iir_Kind_Error =>
+            return Null_Iir;
          when others =>
             Error_Msg_Sem (+Expr, "type %n is not composite", +A_Type);
             return Null_Iir;
@@ -4730,7 +4738,7 @@ package body Sem_Expr is
       Op : Iir;
       Res : Iir;
    begin
-      Op := Create_Iir (Iir_Kind_Condition_Operator);
+      Op := Create_Iir (Iir_Kind_Implicit_Condition_Operator);
       Location_Copy (Op, Cond);
       Set_Operand (Op, Cond);
 
@@ -4778,7 +4786,7 @@ package body Sem_Expr is
                Check_Read (Res);
                return Res;
             end if;
-         else
+         elsif Get_Type (Res) /= Null_Iir then
             --  Many interpretations.
             declare
                Res_List : constant Iir_List :=

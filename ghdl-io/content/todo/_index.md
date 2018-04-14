@@ -39,5 +39,16 @@ Bertram, Felix : he has ported GHDL to Mac OS X [sourceforge](http://eng-osx.sou
 
 ---
 
+<<<<<<< HEAD
 https://github.com/ether/etherpad-lite
 https://github.com/FabianWe/etherpadlite-golang
+=======
+- https://github.com/ether/etherpad-lite
+- https://github.com/FabianWe/etherpadlite-golang
+
+---
+
+- https://gitlab.cern.ch/dcobas/cheby
+- https://indico.cern.ch/event/692484/contributions/2841827/attachments/1584779/2505368/tm-20180118-pyfg-david.pdf
+- https://cwe.ccsds.org/sois/docs/SOIS-APP/Meeting%20Materials/2017/Fall/ESA%20Status%20of%20Electronic%20Data%20Sheets%202017-11-08%20CCSDS.pdf
+>>>>>>> builders

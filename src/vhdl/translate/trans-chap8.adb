@@ -263,8 +263,8 @@ package body Trans.Chap8 is
                Chap3.Translate_Object_Copy (Area, M2Addr (Val), Ret_Type);
                Gen_Return;
             end;
-         when Type_Mode_Record
-            | Type_Mode_Array =>
+         when Type_Mode_Bounded_Records
+            | Type_Mode_Bounded_Arrays =>
             --  * if the return type is a constrained composite type, copy
             --    it to the result area.
             --  Create a temporary area so that if the expression use
@@ -973,7 +973,7 @@ package body Trans.Chap8 is
             E    : O_Enode;
             Temp : Mnode;
          begin
-            Chap3.Translate_Anonymous_Type_Definition (Targ_Type);
+            Chap3.Translate_Anonymous_Subtype_Definition (Targ_Type, False);
 
             --  Use a temporary variable, to avoid overlap.
             Temp := Create_Temp (Get_Info (Targ_Type));
@@ -1857,8 +1857,8 @@ package body Trans.Chap8 is
             --    call a predefined procedure
             New_Procedure_Call (Assocs);
             Close_Temp;
-         when Type_Mode_Array
-           | Type_Mode_Record
+         when Type_Mode_Bounded_Arrays
+           | Type_Mode_Bounded_Records
            | Type_Mode_Unbounded_Array =>
             Subprg_Info := Get_Info (Imp);
             Start_Association (Assocs, Subprg_Info.Operator_Node);
@@ -1912,8 +1912,8 @@ package body Trans.Chap8 is
             --    call a predefined procedure
             New_Procedure_Call (Assocs);
             Close_Temp;
-         when Type_Mode_Array
-            | Type_Mode_Record =>
+         when Type_Mode_Bounded_Arrays
+            | Type_Mode_Bounded_Records =>
             Subprg_Info := Get_Info (Imp);
             Start_Association (Assocs, Subprg_Info.Operator_Node);
             Subprgs.Add_Subprg_Instance_Assoc
@@ -2767,7 +2767,7 @@ package body Trans.Chap8 is
          --  For individual associations, be sure the type is translated.
          --  That's required for slices in case of array conversion.
          if Formal /= Base_Formal then
-            Chap3.Translate_Anonymous_Type_Definition (Formal_Type);
+            Chap3.Translate_Anonymous_Subtype_Definition (Formal_Type, False);
          end if;
 
          --  Evaluate the actual.
@@ -3584,7 +3584,7 @@ package body Trans.Chap8 is
          when Type_Mode_F64 =>
             Subprg := Ghdl_Signal_Simple_Assign_F64;
             Conv := Ghdl_Real_Type;
-         when Type_Mode_Array =>
+         when Type_Mode_Arrays =>
             raise Internal_Error;
          when others =>
             Error_Kind ("gen_signal_assign_non_composite", Targ_Type);
@@ -3682,7 +3682,7 @@ package body Trans.Chap8 is
          when Type_Mode_F64 =>
             Subprg := Ghdl_Signal_Start_Assign_F64;
             Conv := Ghdl_Real_Type;
-         when Type_Mode_Array =>
+         when Type_Mode_Arrays =>
             raise Internal_Error;
          when others =>
             Error_Kind ("gen_signal_assign_non_composite", Targ_Type);
@@ -3842,7 +3842,7 @@ package body Trans.Chap8 is
          when Type_Mode_F64 =>
             Subprg := Ghdl_Signal_Next_Assign_F64;
             Conv := Ghdl_Real_Type;
-         when Type_Mode_Array =>
+         when Type_Mode_Arrays =>
             raise Internal_Error;
          when others =>
             Error_Kind ("gen_signal_next_assign_non_composite", Targ_Type);
@@ -4187,7 +4187,7 @@ package body Trans.Chap8 is
       Target_Type : constant Iir := Get_Type (Target);
    begin
       if Get_Kind (Target) = Iir_Kind_Aggregate then
-         Chap3.Translate_Anonymous_Type_Definition (Target_Type);
+         Chap3.Translate_Anonymous_Subtype_Definition (Target_Type, False);
          Targ := Create_Temp (Get_Info (Target_Type), Mode_Signal);
          Chap4.Allocate_Complex_Object (Target_Type, Alloc_Stack, Targ);
          Translate_Signal_Target_Aggr (Targ, Target, Target_Type);

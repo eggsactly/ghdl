@@ -159,27 +159,32 @@ package body Sem_Decls is
    is
       Decl_Type : constant Iir := Get_Type (Decl);
    begin
-      if Get_Signal_Type_Flag (Decl_Type) = False then
-         Error_Msg_Sem (+Decl, "type of %n cannot be %n", (+Decl, +Decl_Type));
-         case Get_Kind (Decl_Type) is
-            when Iir_Kind_File_Type_Definition =>
-               null;
-            when Iir_Kind_Protected_Type_Declaration =>
-               null;
-            when Iir_Kind_Interface_Type_Definition =>
-               null;
-            when Iir_Kind_Access_Type_Definition
-              | Iir_Kind_Access_Subtype_Definition =>
-               null;
-            when Iir_Kinds_Array_Type_Definition
-              | Iir_Kind_Record_Type_Definition
-              | Iir_Kind_Record_Subtype_Definition =>
-               Error_Msg_Sem
-                 (+Decl, "(%n has an access subelement)", +Decl_Type);
-            when others =>
-               Error_Kind ("check_signal_type", Decl_Type);
-         end case;
+      if Get_Signal_Type_Flag (Decl_Type) then
+         return;
       end if;
+
+      if Is_Error (Decl_Type) then
+         return;
+      end if;
+
+      Error_Msg_Sem (+Decl, "type of %n cannot be %n", (+Decl, +Decl_Type));
+      case Get_Kind (Decl_Type) is
+         when Iir_Kind_File_Type_Definition =>
+            null;
+         when Iir_Kind_Protected_Type_Declaration =>
+            null;
+         when Iir_Kind_Interface_Type_Definition =>
+            null;
+         when Iir_Kind_Access_Type_Definition
+           | Iir_Kind_Access_Subtype_Definition =>
+            null;
+         when Iir_Kinds_Array_Type_Definition
+           | Iir_Kind_Record_Type_Definition
+           | Iir_Kind_Record_Subtype_Definition =>
+            Error_Msg_Sem (+Decl, "(%n has an access subelement)", +Decl_Type);
+         when others =>
+            Error_Kind ("check_signal_type", Decl_Type);
+      end case;
    end Check_Signal_Type;
 
    procedure Sem_Interface_Object_Declaration
@@ -2216,6 +2221,16 @@ package body Sem_Decls is
                  (+Alias, "base type of aliased name and name mismatch");
             end if;
          end if;
+
+         --  LRM08 6.6.2 Object aliases
+         --  The following rules apply yo object aliases:
+         --  b) If the name is an external name, a subtype indication shall not
+         --     appear in the alias declaration.
+         if Get_Kind (N_Name) in Iir_Kinds_External_Name then
+            Error_Msg_Sem
+              (+Alias,
+               "subtype indication not allowed in alias of external name");
+         end if;
       end if;
 
       --  LRM93 4.3.3.1
@@ -2699,11 +2714,11 @@ package body Sem_Decls is
 
          Free_Iir (Alias);
 
-         if Get_Kind (Name) in Iir_Kinds_Denoting_Name then
+         if Get_Kind (Name) in Iir_Kinds_Denoting_And_External_Name then
             Sem_Non_Object_Alias_Declaration (Res);
          else
             Error_Msg_Sem
-              (+Name, "name of nonobject alias is not a declaration");
+              (+Name, "name of nonobject alias is not a name");
 
             --  Create a simple name to an error node.
             N_Entity := Create_Error (Name);

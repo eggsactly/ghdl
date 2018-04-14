@@ -1736,6 +1736,9 @@ package body Sem_Names is
            | Iir_Kind_Instance_Name_Attribute =>
             Free_Iir (Name);
             return Res;
+         when Iir_Kinds_External_Name =>
+            pragma Assert (Name = Res);
+            return Res;
          when Iir_Kind_Psl_Expression =>
             return Res;
          when Iir_Kind_Psl_Declaration =>
@@ -2416,7 +2419,7 @@ package body Sem_Names is
          end if;
 
          if Get_Kind (Base_Type) /= Iir_Kind_Array_Type_Definition then
-            if Finish then
+            if Finish and then not Is_Error (Base_Type) then
                Error_Msg_Sem (+Name, "type of prefix is not an array");
             end if;
             return Null_Iir;
@@ -3578,15 +3581,19 @@ package body Sem_Names is
 
       case Get_Identifier (Attr) is
          when Name_Simple_Name =>
-            Res := Create_Iir (Iir_Kind_Simple_Name_Attribute);
-            Eval_Simple_Name (Get_Identifier (Prefix));
-            Set_Simple_Name_Identifier (Res, Name_Table.Get_Identifier);
-            Attr_Type := Create_Unidim_Array_By_Length
-              (String_Type_Definition,
-               Iir_Int64 (Name_Table.Nam_Length),
-               Attr);
-            Set_Simple_Name_Subtype (Res, Attr_Type);
-            Set_Expr_Staticness (Res, Locally);
+            declare
+               Id : constant Name_Id := Name_Table.Get_Identifier
+                 (Eval_Simple_Name (Get_Identifier (Prefix)));
+            begin
+               Res := Create_Iir (Iir_Kind_Simple_Name_Attribute);
+               Set_Simple_Name_Identifier (Res, Id);
+               Attr_Type := Create_Unidim_Array_By_Length
+                 (String_Type_Definition,
+                  Iir_Int64 (Name_Table.Get_Name_Length (Id)),
+                  Attr);
+               Set_Simple_Name_Subtype (Res, Attr_Type);
+               Set_Expr_Staticness (Res, Locally);
+            end;
 
          when Name_Path_Name =>
             Res := Create_Iir (Iir_Kind_Path_Name_Attribute);
@@ -3772,6 +3779,8 @@ package body Sem_Names is
             Sem_Selected_By_All_Name (Name);
          when Iir_Kind_Attribute_Name =>
             Sem_Attribute_Name (Name);
+         when Iir_Kinds_External_Name =>
+            Sem_External_Name (Name);
          when others =>
             Error_Kind ("sem_name", Name);
       end case;
@@ -4231,6 +4240,17 @@ package body Sem_Names is
       end if;
 
       Set_Type (Name, Atype);
+
+      --  LRM08 8.1 Names
+      --  A name is said to be a static name if and only if one of the
+      --  following condition holds:
+      --  - The name is an external name.
+      Set_Name_Staticness (Name, Globally);
+
+      Set_Expr_Staticness (Name, None);
+
+      --  Consider the node as analyzed.
+      Set_Named_Entity (Name, Name);
    end Sem_External_Name;
 
    function Sem_Terminal_Name (Name : Iir) return Iir

@@ -23,7 +23,6 @@ with Errorout; use Errorout;
 with Std_Names; use Std_Names;
 with Flags; use Flags;
 with Parse_Psl;
-with Name_Table;
 with Str_Table;
 with Xrefs;
 with Elocations; use Elocations;
@@ -1135,8 +1134,8 @@ package body Parse is
                                                return Iir
    is
       Kind : Iir_Kind;
-      Res, Last : Iir;
-      First, Prev_First : Iir;
+      Last : Iir;
+      First : Iir;
       Inter: Iir;
       Is_Default : Boolean;
       Interface_Mode: Iir_Mode;
@@ -1147,9 +1146,6 @@ package body Parse is
       Has_Mode : Boolean;
       Has_Class : Boolean;
    begin
-      Res := Null_Iir;
-      Last := Null_Iir;
-
       --  LRM08 6.5.2 Interface object declarations
       --  Interface obejcts include interface constants that appear as
       --  generics of a design entity, a component, a block, a package or
@@ -1199,7 +1195,12 @@ package body Parse is
             Kind := Iir_Kind_Interface_Variable_Declaration;
       end case;
 
-      Inter := Create_Iir (Kind);
+      First := Create_Iir (Kind);
+
+      if Flag_Elocations then
+         Create_Elocations (First);
+         Set_Start_Location (First, Get_Token_Location);
+      end if;
 
       if Current_Token = Tok_Identifier then
          Is_Default := True;
@@ -1212,21 +1213,14 @@ package body Parse is
          Scan;
       end if;
 
-      Prev_First := Last;
-      First := Inter;
+      Inter := First;
+      Last := First;
       loop
          if Current_Token /= Tok_Identifier then
             Expect (Tok_Identifier);
          end if;
          Set_Identifier (Inter, Current_Identifier);
          Set_Location (Inter);
-
-         if Res = Null_Iir then
-            Res := Inter;
-         else
-            Set_Chain (Last, Inter);
-         end if;
-         Last := Inter;
 
          --  Skip identifier
          Scan;
@@ -1238,11 +1232,22 @@ package body Parse is
          Scan;
 
          Inter := Create_Iir (Kind);
+
+         if Flag_Elocations then
+            Create_Elocations (Inter);
+            Set_Start_Location (Inter, Get_Start_Location (First));
+         end if;
+
+         Set_Chain (Last, Inter);
+         Last := Inter;
       end loop;
 
       Expect (Tok_Colon, "':' must follow the interface element identifier");
 
       --  Skip ':'
+      if Flag_Elocations then
+         Set_Colon_Location (First, Get_Token_Location);
+      end if;
       Scan;
 
       --  Parse mode.
@@ -1278,17 +1283,26 @@ package body Parse is
                Location_Copy (N_Interface, O_Interface);
                Set_Identifier (N_Interface,
                                Get_Identifier (O_Interface));
-               if Prev_First = Null_Iir then
-                  Res := N_Interface;
-               else
-                  Set_Chain (Prev_First, N_Interface);
+
+               if Flag_Elocations then
+                  Create_Elocations (N_Interface);
+                  Set_Start_Location
+                    (N_Interface, Get_Start_Location (O_Interface));
+                  Set_Colon_Location
+                    (N_Interface, Get_Colon_Location (O_Interface));
                end if;
-               Prev_First := N_Interface;
+
                if O_Interface = First then
                   First := N_Interface;
+               else
+                  Set_Chain (Last, N_Interface);
                end if;
                Last := N_Interface;
+
                Inter := Get_Chain (O_Interface);
+               if Flag_Elocations then
+                  Delete_Elocations (O_Interface);
+               end if;
                Free_Iir (O_Interface);
                O_Interface := Inter;
             end loop;
@@ -1339,6 +1353,9 @@ package body Parse is
          end if;
 
          --  Skip ':='
+         if Flag_Elocations then
+            Set_Assign_Location (First, Get_Token_Location);
+         end if;
          Scan;
 
          Default_Value := Parse_Expression;
@@ -1367,7 +1384,7 @@ package body Parse is
          Inter := Get_Chain (Inter);
       end loop;
 
-      return Res;
+      return First;
    end Parse_Interface_Object_Declaration;
 
    --  Precond : 'package'
@@ -2202,6 +2219,11 @@ package body Parse is
       end loop;
 
       Set_Elements_Declaration_List (Res, List_To_Flist (El_List));
+
+      if Flag_Elocations then
+         Create_Elocations (Res);
+         Set_End_Location (Res, Get_Token_Location);
+      end if;
 
       --  Skip 'end'
       Scan_Expect (Tok_Record);
@@ -4622,9 +4644,12 @@ package body Parse is
       Parse_Declarative_Part (Res);
 
       if Current_Token = Tok_Begin then
-         Set_Has_Begin (Res, True);
-         Scan;
          Begin_Loc := Get_Token_Location;
+         Set_Has_Begin (Res, True);
+
+         --  Skip 'begin'.
+         Scan;
+
          Parse_Concurrent_Statements (Res);
       else
          Begin_Loc := No_Location;
@@ -4634,7 +4659,9 @@ package body Parse is
       Expect (Tok_End);
       End_Loc := Get_Token_Location;
 
+      --  Skip 'end'.
       Scan;
+
       if Current_Token = Tok_Entity then
          if Flags.Vhdl_Std = Vhdl_87 then
             Error_Msg_Parse ("'entity' keyword not allowed here by vhdl 87");
@@ -4907,33 +4934,27 @@ package body Parse is
    --  Simply create the node for a bit string.
    function Parse_Bit_String return Iir
    is
-      use Name_Table;
+      use Str_Table;
       Res : Iir;
-      C : Character;
       B : Number_Base_Type;
    begin
       Res := Create_Iir (Iir_Kind_String_Literal8);
       Set_Location (Res);
       Set_String8_Id (Res, Current_String_Id);
       Set_String_Length (Res, Current_String_Length);
-      if Nam_Buffer (1) = 's' then
-         Set_Has_Sign (Res, True);
-         Set_Has_Signed (Res, True);
-         pragma Assert (Nam_Length = 2);
-         C := Name_Table.Nam_Buffer (2);
-      elsif Nam_Buffer (1) = 'u' then
-         Set_Has_Sign (Res, True);
-         Set_Has_Signed (Res, False);
-         pragma Assert (Nam_Length = 2);
-         C := Nam_Buffer (2);
-      else
-         Set_Has_Sign (Res, False);
-         Set_Has_Signed (Res, False);
-         pragma Assert (Nam_Length = 1);
-         C := Nam_Buffer (1);
-      end if;
+      case Get_Bit_String_Sign is
+         when 's' =>
+            Set_Has_Sign (Res, True);
+            Set_Has_Signed (Res, True);
+         when 'u' =>
+            Set_Has_Sign (Res, True);
+            Set_Has_Signed (Res, False);
+         when others =>
+            Set_Has_Sign (Res, False);
+            Set_Has_Signed (Res, False);
+      end case;
 
-      case C is
+      case Get_Bit_String_Base is
          when 'b' =>
             B := Base_2;
          when 'o' =>
@@ -6789,7 +6810,7 @@ package body Parse is
       Kind : Iir_Kind;
       Subprg: Iir;
       Subprg_Body : Iir;
-      Start_Loc, Begin_Loc, End_Loc : Location_Type;
+      Start_Loc, Is_Loc, Begin_Loc, End_Loc : Location_Type;
    begin
       --  Create the node.
       Start_Loc := Get_Token_Location;
@@ -6865,6 +6886,7 @@ package body Parse is
       Set_Chain (Subprg, Subprg_Body);
 
       --  Skip 'is'.
+      Is_Loc := Get_Token_Location;
       Expect (Tok_Is);
       Scan;
 
@@ -6885,6 +6907,7 @@ package body Parse is
 
       if Flag_Elocations then
          Create_Elocations (Subprg_Body);
+         Set_Is_Location (Subprg_Body, Is_Loc);
          Set_Begin_Location (Subprg_Body, Begin_Loc);
          Set_End_Location (Subprg_Body, End_Loc);
       end if;
@@ -7121,6 +7144,7 @@ package body Parse is
       Actual: Iir;
       Nbr_Assocs : Natural;
       Loc : Location_Type;
+      Arrow_Loc : Location_Type;
       Comma_Loc : Location_Type;
    begin
       Sub_Chain_Init (Res, Last);
@@ -7134,6 +7158,7 @@ package body Parse is
       loop
          --  Parse formal and actual.
          Loc := Get_Token_Location;
+         Arrow_Loc := No_Location;
          Formal := Null_Iir;
 
          if Current_Token /= Tok_Open then
@@ -7157,6 +7182,7 @@ package body Parse is
                when Tok_Double_Arrow =>
                   --  Check that FORMAL is a name and not an expression.
                   Formal := Check_Formal_Form (Actual);
+                  Arrow_Loc := Get_Token_Location;
 
                   --  Skip '=>'
                   Scan;
@@ -7183,6 +7209,11 @@ package body Parse is
             Set_Actual (El, Actual);
          end if;
          Set_Formal (El, Formal);
+
+         if Flag_Elocations then
+            Create_Elocations (El);
+            Set_Arrow_Location (El, Arrow_Loc);
+         end if;
 
          Sub_Chain_Append (Res, Last, El);
          exit when Current_Token = Tok_Right_Paren;
@@ -7491,6 +7522,10 @@ package body Parse is
       Set_Has_Label (Bod, Label /= Null_Identifier);
       End_Loc := No_Location;
 
+      if Flag_Elocations then
+         Create_Elocations (Bod);
+      end if;
+
       --  Check for a block declarative item.
       case Current_Token is
          when
@@ -7538,6 +7573,10 @@ package body Parse is
             Expect (Tok_Begin);
             Set_Has_Begin (Bod, True);
 
+            if Flag_Elocations then
+               Set_Begin_Location (Bod, Get_Token_Location);
+            end if;
+
             --  Skip 'begin'
             Scan;
          when others =>
@@ -7559,6 +7598,10 @@ package body Parse is
       if Vhdl_Std >= Vhdl_08 and then Current_Token /= Tok_Generate then
          --  This is the 'end' of the generate_statement_body.
          Set_Has_End (Bod, True);
+         if Flag_Elocations then
+            Set_End_Location (Bod, End_Loc);
+         end if;
+
          Check_End_Name (Label, Bod);
          Scan_Semi_Colon ("generate statement body");
 
@@ -8513,6 +8556,34 @@ package body Parse is
 
    --  precond : next token
    --  postcond: next token
+   function Parse_Entity_Aspect_Entity return Iir
+   is
+      Res : Iir;
+   begin
+      Res := Create_Iir (Iir_Kind_Entity_Aspect_Entity);
+      Set_Location (Res);
+
+      if Current_Token = Tok_Entity then
+         --  Eat 'entity' (but only if present).
+         Scan;
+      end if;
+
+      Expect (Tok_Identifier);
+      Set_Entity_Name (Res, Parse_Name (False));
+
+      --  Optional architecture
+      if Current_Token = Tok_Left_Paren then
+         Scan_Expect (Tok_Identifier);
+         Set_Architecture (Res, Current_Text);
+         Scan_Expect (Tok_Right_Paren);
+         Scan;
+      end if;
+
+      return Res;
+   end Parse_Entity_Aspect_Entity;
+
+   --  precond : next token
+   --  postcond: next token
    --
    --  [ LRM93 5.2.1.1 ]
    --  entity_aspect ::= ENTITY ENTITY_name [ ( ARCHITECTURE_identifier ) ]
@@ -8524,16 +8595,7 @@ package body Parse is
    begin
       case Current_Token is
          when Tok_Entity =>
-            Res := Create_Iir (Iir_Kind_Entity_Aspect_Entity);
-            Set_Location (Res);
-            Scan_Expect (Tok_Identifier);
-            Set_Entity_Name (Res, Parse_Name (False));
-            if Current_Token = Tok_Left_Paren then
-               Scan_Expect (Tok_Identifier);
-               Set_Architecture (Res, Current_Text);
-               Scan_Expect (Tok_Right_Paren);
-               Scan;
-            end if;
+            Res := Parse_Entity_Aspect_Entity;
          when Tok_Configuration =>
             Res := Create_Iir (Iir_Kind_Entity_Aspect_Configuration);
             Set_Location (Res);
@@ -8544,10 +8606,9 @@ package body Parse is
             Set_Location (Res);
             Scan;
          when others =>
-            --  FIXME: if the token is an identifier, try as if the 'entity'
-            --  keyword is missing.
-            Error_Msg_Parse
-              ("'entity', 'configuration' or 'open' keyword expected");
+            Error_Msg_Parse ("'entity', 'configuration' or 'open' expected");
+            --  Assume 'entity' is missing (common case).
+            Res := Parse_Entity_Aspect_Entity;
       end case;
       return Res;
    end Parse_Entity_Aspect;

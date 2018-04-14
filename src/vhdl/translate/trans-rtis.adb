@@ -986,19 +986,15 @@ package body Trans.Rtis is
    function Generate_Name (Node : Iir) return O_Dnode
    is
       use Name_Table;
-      Id : Name_Id;
+      Node_Id : constant Name_Id := Get_Identifier (Node);
+      Id : O_Ident;
    begin
-      Id := Get_Identifier (Node);
-      if Is_Character (Id) then
-         Nam_Buffer (1) := ''';
-         Nam_Buffer (2) := Get_Character (Id);
-         Nam_Buffer (3) := ''';
-         Nam_Length := 3;
+      Id := Create_Identifier ("RTISTR");
+      if Is_Character (Node_Id) then
+         return Create_String (''' & Get_Character (Node_Id) & ''', Id);
       else
-         Image (Id);
+         return Create_String (Image (Node_Id), Id);
       end if;
-      return Create_String (Nam_Buffer (1 .. Nam_Length),
-                            Create_Identifier ("RTISTR"));
    end Generate_Name;
 
    function Get_Null_Loc return O_Cnode is
@@ -1436,10 +1432,11 @@ package body Trans.Rtis is
       Finish_Init_Value (Res, Val);
    end Generate_Array_Type_Indexes;
 
-   function Type_To_Mode (Atype : Iir) return Natural is
+   function Type_To_Mode (Atype : Iir) return Natural
+   is
       Res : Natural := 0;
    begin
-      if Is_Complex_Type (Get_Info (Atype)) then
+      if not Is_Static_Type (Get_Info (Atype)) then
          Res := Res + 1;
       end if;
       if Is_Anonymous_Type_Definition (Atype)
@@ -1541,11 +1538,11 @@ package body Trans.Rtis is
       Start_Init_Value (Info.Type_Rti);
       Start_Record_Aggr (Aggr, Ghdl_Rtin_Subtype_Composite);
       case Info.Type_Mode is
-         when Type_Mode_Array =>
+         when Type_Mode_Bounded_Arrays =>
             Kind := Ghdl_Rtik_Subtype_Array;
          when Type_Mode_Unbounded_Array =>
             Kind := Ghdl_Rtik_Subtype_Unconstrained_Array;
-         when Type_Mode_Record =>
+         when Type_Mode_Bounded_Records =>
             Kind := Ghdl_Rtik_Subtype_Record;
          when Type_Mode_Unbounded_Record =>
             Kind := Ghdl_Rtik_Subtype_Unbounded_Record;
@@ -1566,18 +1563,21 @@ package body Trans.Rtis is
       New_Record_Aggr_El (Aggr, Val);
       for I in Mode_Value .. Mode_Signal loop
          case Info.Type_Mode is
-            when Type_Mode_Array
-              | Type_Mode_Record =>
-               Val := Get_Null_Loc;
+            when Type_Mode_Static_Array
+              | Type_Mode_Static_Record =>
                if Info.Ortho_Type (I) /= O_Tnode_Null then
-                  if Is_Complex_Type (Info) then
-                     if Info.C (I).Size_Var /= Null_Var then
-                        Val := Var_Acc_To_Loc (Info.C (I).Size_Var);
-                     end if;
-                  else
-                     Val := New_Sizeof (Info.Ortho_Type (I),
-                                        Ghdl_Ptr_Type);
-                  end if;
+                  Val := New_Sizeof (Info.Ortho_Type (I), Ghdl_Ptr_Type);
+               else
+                  Val := Get_Null_Loc;
+               end if;
+            when Type_Mode_Complex_Array
+              | Type_Mode_Complex_Record =>
+               if Info.Ortho_Type (I) /= O_Tnode_Null
+                 and then Info.C (I).Size_Var /= Null_Var
+               then
+                  Val := Var_Acc_To_Loc (Info.C (I).Size_Var);
+               else
+                  Val := Get_Null_Loc;
                end if;
             when Type_Mode_Unbounded_Array
               | Type_Mode_Unbounded_Record =>
@@ -2819,10 +2819,8 @@ package body Trans.Rtis is
                       Storage, Ghdl_Rtin_Type_Scalar);
 
       if Public then
-         Image (Id);
          Name := Create_String
-           (Nam_Buffer (1 .. Nam_Length),
-            Create_Identifier_Without_Prefix (Id, "__RTISTR"));
+           (Image (Id), Create_Identifier_Without_Prefix (Id, "__RTISTR"));
          Start_Init_Value (Info.Library_Rti_Const);
          Start_Record_Aggr (Aggr, Ghdl_Rtin_Type_Scalar);
          New_Record_Aggr_El (Aggr, Generate_Common (Ghdl_Rtik_Library));

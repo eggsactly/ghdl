@@ -16,7 +16,6 @@
 --  Software Foundation, 59 Temple Place - Suite 330, Boston, MA
 --  02111-1307, USA.
 
-with Name_Table;
 with Std_Names;
 with Std_Package; use Std_Package;
 with Errorout; use Errorout;
@@ -247,8 +246,7 @@ package body Trans.Chap2 is
                Id := Create_Identifier;
             when Foreign_Vhpidirect =>
                Id := Get_Identifier
-                 (Name_Table.Nam_Buffer (Foreign.Subprg_First
-                  .. Foreign.Subprg_Last));
+                 (Foreign.Subprg_Name (1 .. Foreign.Subprg_Len));
          end case;
          Storage := O_Storage_External;
       else
@@ -456,7 +454,7 @@ package body Trans.Chap2 is
       if Has_Nested or else Has_Suspend then
          --  Unnest subprograms.
          --  Create an instance for the local declarations.
-         Push_Frame_Factory (Info.Subprg_Frame_Scope'Access);
+         Push_Frame_Factory (Info.Subprg_Frame_Scope'Access, Has_Suspend);
          Add_Subprg_Instance_Field (Upframe_Field, Upframe_Scope);
 
          if Info.Subprg_Params_Ptr /= O_Tnode_Null then
@@ -1200,6 +1198,7 @@ package body Trans.Chap2 is
       case Src.Kind is
          when Kind_Type =>
             Dest.all := (Kind => Kind_Type,
+                         Mark => False,
                          Type_Mode => Src.Type_Mode,
                          Type_Incomplete => Src.Type_Incomplete,
                          Type_Locally_Constrained =>
@@ -1215,7 +1214,8 @@ package body Trans.Chap2 is
             if Src.C /= null then
                Dest.C := new Complex_Type_Arr_Info'
                  (Mode_Value =>
-                    (Size_Var => Instantiate_Var
+                    (Mark => False,
+                     Size_Var => Instantiate_Var
                        (Src.C (Mode_Value).Size_Var),
                      Builder_Need_Func =>
                        Src.C (Mode_Value).Builder_Need_Func,
@@ -1228,7 +1228,8 @@ package body Trans.Chap2 is
                      Builder_Func =>
                        Src.C (Mode_Value).Builder_Func),
                   Mode_Signal =>
-                    (Size_Var => Instantiate_Var
+                    (Mark => False,
+                     Size_Var => Instantiate_Var
                        (Src.C (Mode_Signal).Size_Var),
                      Builder_Need_Func =>
                        Src.C (Mode_Signal).Builder_Need_Func,
@@ -1244,6 +1245,7 @@ package body Trans.Chap2 is
          when Kind_Object =>
             Dest.all :=
               (Kind => Kind_Object,
+               Mark => False,
                Object_Static => Src.Object_Static,
                Object_Var => Instantiate_Var (Src.Object_Var),
                Object_Rti => Src.Object_Rti);
@@ -1252,6 +1254,7 @@ package body Trans.Chap2 is
             pragma Assert (Src.Signal_Function = O_Dnode_Null);
             Dest.all :=
               (Kind => Kind_Signal,
+               Mark => False,
                Signal_Val => Instantiate_Var (Src.Signal_Val),
                Signal_Valp => Instantiate_Var (Src.Signal_Valp),
                Signal_Sig => Instantiate_Var (Src.Signal_Sig),
@@ -1263,6 +1266,7 @@ package body Trans.Chap2 is
               Instantiate_Var_Scope (Src.Subprg_Frame_Scope);
             Dest.all :=
               (Kind => Kind_Subprg,
+               Mark => False,
                Use_Stack2 => Src.Use_Stack2,
                Subprg_Node => Src.Subprg_Node,
                Res_Interface => Src.Res_Interface,
@@ -1285,6 +1289,7 @@ package body Trans.Chap2 is
          when Kind_Operator =>
             Dest.all :=
               (Kind => Kind_Operator,
+               Mark => False,
                Operator_Stack2 => Src.Operator_Stack2,
                Operator_Body => Src.Operator_Body,
                Operator_Node => Src.Operator_Node,
@@ -1295,18 +1300,22 @@ package body Trans.Chap2 is
                Operator_Res => Src.Operator_Res);
          when Kind_Interface =>
             Dest.all := (Kind => Kind_Interface,
+                         Mark => False,
                          Interface_Mechanism => Src.Interface_Mechanism,
                          Interface_Decl => Src.Interface_Decl,
                          Interface_Field => Src.Interface_Field);
          when Kind_Index =>
             Dest.all := (Kind => Kind_Index,
+                         Mark => False,
                          Index_Field => Src.Index_Field);
          when Kind_Expr =>
             Dest.all := (Kind => Kind_Expr,
+                         Mark => False,
                          Expr_Node => Src.Expr_Node);
          when Kind_Package_Instance =>
             Dest.all :=
               (Kind => Kind_Package_Instance,
+               Mark => False,
                Package_Instance_Spec_Var =>
                  Instantiate_Var (Src.Package_Instance_Spec_Var),
                Package_Instance_Body_Var =>
@@ -1326,12 +1335,14 @@ package body Trans.Chap2 is
 
          when Kind_Field =>
             Dest.all := (Kind => Kind_Field,
+                         Mark => False,
                          Field_Node => Src.Field_Node,
                          Field_Bound => Src.Field_Bound);
 
          when Kind_Package =>
             Dest.all :=
               (Kind => Kind_Package,
+               Mark => False,
                Package_Elab_Spec_Subprg => Src.Package_Elab_Spec_Subprg,
                Package_Elab_Body_Subprg => Src.Package_Elab_Body_Subprg,
                Package_Elab_Spec_Instance =>

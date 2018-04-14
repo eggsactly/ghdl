@@ -197,6 +197,10 @@ package body Canon is
          when Iir_Kind_Allocator_By_Subtype =>
             null;
 
+         when Iir_Kind_External_Variable_Name
+           | Iir_Kind_External_Constant_Name =>
+            null;
+
          when Iir_Kinds_Monadic_Operator =>
             Canon_Extract_Sensitivity
               (Get_Operand (Expr), Sensitivity_List, False);
@@ -224,7 +228,8 @@ package body Canon is
          when Iir_Kind_Interface_Signal_Declaration
            | Iir_Kind_Signal_Declaration
            | Iir_Kind_Guard_Signal_Declaration
-           | Iir_Kinds_Signal_Attribute =>
+           | Iir_Kinds_Signal_Attribute
+           | Iir_Kind_External_Signal_Name =>
             --  LRM 8.1
             --  A simple name that denotes a signal, add the longuest static
             --  prefix of the name to the sensitivity set;
@@ -547,8 +552,7 @@ package body Canon is
    end Canon_Extract_Sensitivity_From_Callees;
 
    function Canon_Extract_Process_Sensitivity
-     (Proc : Iir_Sensitized_Process_Statement)
-     return Iir_List
+     (Proc : Iir_Sensitized_Process_Statement) return Iir_List
    is
       Res : Iir_List;
    begin

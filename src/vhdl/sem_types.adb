@@ -48,6 +48,15 @@ package body Sem_Types is
       --  Maybe the type is resolved through its elements.
       if Func /= Null_Iir then
          Set_Resolution_Function_Flag (Func, True);
+
+         --  For internal reasons of translation, the element subtype has
+         --  to be translated for signals.
+         --  FIXME: maybe move the whole Has_Signal flag generation in
+         --  translation, as this is needed only for translation.
+         --  FIXME: how to deal with incorrect function ?  Use an Error node ?
+         Set_Type_Has_Signal
+           (Get_Element_Subtype
+              (Get_Type (Get_Interface_Declaration_Chain (Func))));
       end if;
    end Mark_Resolution_Function;
 
@@ -82,6 +91,13 @@ package body Sem_Types is
            | Iir_Kind_Record_Subtype_Definition =>
             Set_Type_Has_Signal (Get_Base_Type (Atype));
             Mark_Resolution_Function (Atype);
+            declare
+               Tm : constant Iir := Get_Subtype_Type_Mark (Atype);
+            begin
+               if Tm /= Null_Iir then
+                  Set_Type_Has_Signal (Get_Type (Get_Named_Entity (Tm)));
+               end if;
+            end;
          when others =>
             null;
       end case;
@@ -572,6 +588,10 @@ package body Sem_Types is
                   Inter : Iir;
                   Inter_Type : Iir;
                begin
+                  --  LRM08 3.5.1 Protected type declarations
+                  --  Such formal parameters must not be of an access type or
+                  --  a file type; moreover, they must not have a subelement
+                  --  that is an access type of a file type.
                   Inter := Get_Interface_Declaration_Chain (El);
                   while Inter /= Null_Iir loop
                      Inter_Type := Get_Type (Inter);
@@ -586,14 +606,19 @@ package body Sem_Types is
                      end if;
                      Inter := Get_Chain (Inter);
                   end loop;
+
+                  --  LRM08 3.5.1 Protected type declarations
+                  --  Additionally, in the case of a function subprogram, the
+                  --  return type of the function must not be of an access type
+                  --  or file type; moreover, it must not have a subelement
+                  --  that is an access type of a file type.
                   if Get_Kind (El) = Iir_Kind_Function_Declaration then
                      Inter_Type := Get_Return_Type (El);
                      if Inter_Type /= Null_Iir
                        and then Get_Signal_Type_Flag (Inter_Type) = False
                      then
                         Error_Msg_Sem
-                          (+El,
-                           "method return type must not be access of file");
+                          (+El, "method cannot return an access or a file");
                      end if;
                   end if;
                end;
@@ -1479,8 +1504,8 @@ package body Sem_Types is
    procedure Sem_Array_Constraint_Indexes (Def : Iir; Type_Mark : Iir)
    is
       El_Type : constant Iir := Get_Element_Subtype (Type_Mark);
+      Base_Type : constant Iir := Get_Base_Type (Type_Mark);
       Type_Index, Subtype_Index: Iir;
-      Base_Type : Iir;
       Index_Staticness : Iir_Staticness;
       Type_Nbr_Dim : Natural;
       Subtype_Nbr_Dim : Natural;
@@ -1489,7 +1514,6 @@ package body Sem_Types is
       Subtype_Index_List2 : Iir_Flist;
    begin
       -- Check each index constraint against array type.
-      Base_Type := Get_Base_Type (Type_Mark);
       Set_Base_Type (Def, Base_Type);
 
       Index_Staticness := Locally;
@@ -1509,10 +1533,12 @@ package body Sem_Types is
          if Get_Kind (Type_Mark) = Iir_Kind_Array_Subtype_Definition then
             Set_Index_Constraint_Flag
               (Def, Get_Index_Constraint_Flag (Type_Mark));
+            Set_Index_Subtype_List
+              (Def, Get_Index_Subtype_List (Type_Mark));
          else
             Set_Index_Constraint_Flag (Def, False);
+            Set_Index_Subtype_List (Def, Type_Index_List);
          end if;
-         Set_Index_Subtype_List (Def, Type_Index_List);
       else
          if Get_Kind (Type_Mark) = Iir_Kind_Array_Subtype_Definition
            and then Get_Index_Constraint_Flag (Type_Mark)

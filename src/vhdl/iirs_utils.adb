@@ -177,7 +177,8 @@ package body Iirs_Utils is
             return Name_Op_Plus;
          when Iir_Kind_Absolute_Operator =>
             return Name_Abs;
-         when Iir_Kind_Condition_Operator =>
+         when Iir_Kind_Condition_Operator
+           | Iir_Kind_Implicit_Condition_Operator =>
             return Name_Op_Condition;
          when others =>
             raise Internal_Error;
@@ -435,6 +436,9 @@ package body Iirs_Utils is
             --  Names can denote declared entities [...]
             --  GHDL: in particular, names can denote objects.
             return Name_To_Object (Get_Named_Entity (Name));
+
+         when Iir_Kinds_External_Name =>
+            return Name;
 
          when others =>
             return Null_Iir;
@@ -1051,6 +1055,7 @@ package body Iirs_Utils is
       if Ind /= Null_Iir
         and then Get_Kind (Ind) in Iir_Kinds_Denoting_Name
       then
+         --  A resolution indication can be an array/record element resolution.
          return Get_Named_Entity (Ind);
       else
          return Null_Iir;
