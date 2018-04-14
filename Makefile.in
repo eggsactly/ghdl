@@ -150,8 +150,11 @@ version.tmp: $(srcdir)/src/version.in force
 	   || ! desc=`cd $(srcdir); git describe --dirty`; then \
 	  desc="tarball"; \
         fi; \
-	$(SED) -e "s/[(].*[)]/($$desc)/" \
-               -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
+	sed_desc="" \
+	if [ "$desc != "tarball" ]; then \
+    sed_desc='-e "s/[(].*[)]/($$desc)/"'  \
+	fi;  \
+	$(SED) $sed_desc -e "s/@VER@/$(ghdl_version)/" < $< > $@; \
 
 version.ads: version.tmp
 #	Change version.ads only if version.tmp has been modified to avoid
